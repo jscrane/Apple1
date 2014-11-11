@@ -1,0 +1,4 @@
+- shiftmap for keyboard
+- scrolling screen
+- checkpoint and restore images (i.e., startrek)
+- break out PIA abstraction

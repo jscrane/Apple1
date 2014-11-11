@@ -1,4 +1,4 @@
-Apple1-Energia
-==============
+Apple-1 Emulator
+================
 
-Apple-1 Emulator in Energia with r65emu
+- see [https://github.com/nobuh/napple1](napple1)
