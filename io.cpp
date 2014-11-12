@@ -21,6 +21,7 @@ void io::reset() {
 	utft.setFont((uint8_t *)TinyFont);
 	UTFTDisplay::begin(TFT_BG, TFT_FG);
 	clear();
+	_cy += 2;
 
 	r = c = 0;
 	for (int j = 0; j < ROWS; j++)
@@ -90,28 +91,28 @@ void io::up(byte scan) {
 void io::draw(char ch, int i, int j) {
 	if (screen[j][i] != ch) {
 		screen[j][i] = ch;
-		utft.print(&ch, i*_cx, j*_cy);
+		char c[2] = { ch, 0 };
+		utft.print(c, i*_cx, j*_cy);
 	}
 }
 
 void io::display(byte b) {
 	char ch = (char)b;
 	switch(ch) {
-	case 0x7f:
+	case 0x5f:
+		draw(' ', c, r);
 		if (c-- == 0) {
 			r--;
 			c = COLS-1;
 		}
-		draw(' ', c, r);
 		break;
-//	case 0x0a:
 	case 0x0d:
+		draw(' ', c, r);
 		c = 0;
 		r++;
 		break;
 	default:
-//		if (ch >= 0x20 && ch != 0x7f) {
-		if (ch >= 0x20) {
+		if (ch >= 0x20 && ch < 0x7f) {
 			draw(ch, c, r);
 			if (++c == COLS) {
 				c = 0;
@@ -128,15 +129,17 @@ void io::display(byte b) {
 		for (int i = 0; i < COLS; i++)
 			draw(' ', i, ROWS-1);
 	}
-	// FIXME: draw cursor?
+	draw('_', c, r);
 }
 
 void io::operator=(byte b) {
 
+/*
 Serial.print(">");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(b, 16);
+*/
 
 	switch(_acc % 4) {
 	case 0:
@@ -167,33 +170,41 @@ io::operator byte() {
 
 	switch (_acc % 4) {
 	case 0:
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(kbd, 16);
+*/
 		return kbd;
 	case 1:
 		if (kbd_int && kbd_cr >= 0x80) {
 			kbd_cr = 0;
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(0xa7, 16);
+*/
 			return 0xa7;
 		}
 //Serial.println(kbd_cr, 16);
 		return kbd_cr;
 	case 2:
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(dsp, 16);
+*/
 		return dsp;
 	case 3:
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(dsp_cr, 16);
+*/
 		return dsp_cr;
 	}
 	return 0;
