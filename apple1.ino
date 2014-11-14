@@ -29,10 +29,16 @@ void status(const char *fmt, ...) {
 jmp_buf ex;
 r6502 cpu(&memory, &ex, status);
 bool halted = false;
+const char *filename;
 
 void reset() {
 	bool sd = hardware_reset();
+
 	io.reset();
+	if (sd)
+		io.tape.start(PROGRAMS);
+	else
+		io.status("No SD Card");
 
 	halted = (setjmp(ex) != 0);
 }
@@ -61,6 +67,17 @@ void loop() {
 			switch (key) {
 			case PS2_F1:
 				reset();
+				break;
+			case PS2_F2:
+				filename = io.tape.advance();
+				io.status(filename);
+				break;
+			case PS2_F3:
+				filename = io.tape.rewind();
+				io.status(filename);
+				break;
+			case PS2_F4:
+				io.load();
 				break;
 			default:
 				io.up(key);

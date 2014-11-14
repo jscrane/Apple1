@@ -1,4 +1,3 @@
 - make TinyFont hardware-default?
 - break out PIA abstraction
-- loading programs from, e.g., http://www.brielcomputers.com/files/games.zip
 - checkpoint and restore images (i.e., startrek)

@@ -1,7 +1,9 @@
 #include <UTFT.h>
 #include <memory.h>
 #include <utftdisplay.h>
+#include <sdtape.h>
 #include <keyboard.h>
+#include <timed.h>
 
 #include "io.h"
 #include "config.h"
@@ -18,8 +20,7 @@ static char screen[ROWS][COLS];
 #include "TinyFont.h"
 
 void io::reset() {
-	utft.setFont((uint8_t *)TinyFont);
-	UTFTDisplay::begin(TFT_BG, TFT_FG);
+	UTFTDisplay::begin(TFT_BG, TFT_FG, (uint8_t *)TinyFont);
 	clear();
 	_cy += 2;
 
@@ -28,9 +29,18 @@ void io::reset() {
 		for (int i = 0; i < COLS; i++)
 			screen[j][i] = ' ';
 
+	_loading = false;
+
 	// PIA state
 	dsp_cr = kbd_cr = 0;
 	kbd_int = dsp_out = 0;
+}
+
+void io::load() {
+	if (tape.more()) {
+		_loading = true;
+		enter(tape.read());
+	}
 }
 
 // ascii map for scan-codes
@@ -78,14 +88,17 @@ void io::down(byte scan) {
 		_shift = true;
 }
 
+void io::enter(byte key) {
+	kbd = key + 0x80;
+	kbd_cr = 0xa7;
+}
+
 void io::up(byte scan) {
 	if (isshift(scan)) {
 		_shift = false;
 		return;
 	}
-	byte m = _shift? shiftmap[scan]: scanmap[scan];
-	kbd = m + 0x80;
-	kbd_cr = 0xa7;
+	enter(_shift? shiftmap[scan]: scanmap[scan]);
 }
 
 void io::draw(char ch, int i, int j) {
@@ -134,12 +147,10 @@ void io::display(byte b) {
 
 void io::operator=(byte b) {
 
-/*
 Serial.print(">");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(b, 16);
-*/
 
 	switch(_acc % 4) {
 	case 0:
@@ -170,22 +181,24 @@ io::operator byte() {
 
 	switch (_acc % 4) {
 	case 0:
-/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(kbd, 16);
-*/
 		return kbd;
 	case 1:
 		if (kbd_int && kbd_cr >= 0x80) {
 			kbd_cr = 0;
-/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(0xa7, 16);
-*/
+			if (_loading) {
+				if (tape.more())
+					enter(tape.read());
+				else
+					_loading = false;
+			}
 			return 0xa7;
 		}
 //Serial.println(kbd_cr, 16);

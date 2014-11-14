@@ -6,5 +6,6 @@
 
 #define TFT_FG	VGA_LIME
 #define TFT_BG	VGA_BLACK
+#define PROGRAMS	"/apple1/"
 
 #endif
