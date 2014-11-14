@@ -228,7 +228,33 @@ Serial.println(dsp_cr, 16);
 }
 
 void io::checkpoint(Stream &s) {
+	s.write(dsp_cr);
+	s.write(dsp);
+	s.write(kbd_cr);
+	s.write(kbd);
+	s.write(kbd_int);
+	s.write(dsp_out);
+	s.write(r);
+	s.write(c);
+	for (int j = 0; j < ROWS; j++)
+		for (int i = 0; i < COLS; i++)
+			s.write(screen[j][i]);
 }
 
 void io::restore(Stream &s) {
+	dsp_cr = s.read();
+	dsp = s.read();
+	kbd_cr = s.read();
+	kbd = s.read();
+	kbd_int = s.read();
+	dsp_out = s.read();
+	r = s.read();
+	c = s.read();
+	for (int j = 0; j < ROWS; j++)
+		for (int i = 0; i < COLS; i++) {
+			char c = s.read();
+			screen[j][i] = c;
+			draw(c, i, j);
+		}
+	draw('_', c, r);
 }

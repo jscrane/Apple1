@@ -64,7 +64,7 @@ void loop() {
 		unsigned key = ps2.read();
 		if (!ps2.isbreak())
 			io.down(key);
-		else {
+		else
 			switch (key) {
 			case PS2_F1:
 				reset();
@@ -80,11 +80,17 @@ void loop() {
 			case PS2_F4:
 				io.load();
 				break;
+			case PS2_F6:
+				io.status(checkpoint(io.tape, PROGRAMS));
+				break;
+			case PS2_F7:
+				if (filename)
+					restore(io.tape, PROGRAMS, filename);
+				break;
 			default:
 				io.up(key);
 				break;
 			}
-		}
 	} else if (!halted)
 		cpu.run(CPU_INSTRUCTIONS);
 }
