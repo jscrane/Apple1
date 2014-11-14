@@ -181,18 +181,22 @@ io::operator byte() {
 
 	switch (_acc % 4) {
 	case 0:
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(kbd, 16);
+*/
 		return kbd;
 	case 1:
 		if (kbd_int && kbd_cr >= 0x80) {
 			kbd_cr = 0;
+/*
 Serial.print("<");
 Serial.print(_acc, 16);
 Serial.print(" ");
 Serial.println(0xa7, 16);
+*/
 			if (_loading) {
 				if (tape.more())
 					enter(tape.read());

@@ -51,6 +51,7 @@ void setup() {
 	for (unsigned i = 0; i < RAM_SIZE; i += 1024)
 		memory.put(pages[i / 1024], i);
 
+	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 	memory.put(io, 0xd000);
 	memory.put(b, 0xe000);
 	memory.put(m, 0xff00);
