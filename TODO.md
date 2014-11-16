@@ -1,3 +1,2 @@
-- make TinyFont hardware-default?
 - break out PIA abstraction
 - checkpoint and restore images (i.e., startrek)

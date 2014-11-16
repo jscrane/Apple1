@@ -17,10 +17,8 @@ static unsigned kbd_int, dsp_out;
 static unsigned r, c;
 static char screen[ROWS][COLS];
 
-#include "TinyFont.h"
-
 void io::reset() {
-	UTFTDisplay::begin(TFT_BG, TFT_FG, (uint8_t *)TinyFont);
+	UTFTDisplay::begin(TFT_BG, TFT_FG);
 	clear();
 	_cy += 2;
 
