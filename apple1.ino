@@ -7,6 +7,7 @@
 
 #include "roms/basic.h"
 #include "roms/monitor.h"
+#include "pia.h"
 #include "io.h"
 #include "config.h"
 

@@ -5,12 +5,10 @@
 #include <keyboard.h>
 #include <timed.h>
 
+#include "pia.h"
 #include "io.h"
 #include "config.h"
 #include "hardware.h"
-
-static byte dsp_cr, dsp, kbd_cr, kbd;
-static unsigned kbd_int, dsp_out;
 
 #define ROWS	24
 #define COLS	40
@@ -28,10 +26,7 @@ void io::reset() {
 			screen[j][i] = ' ';
 
 	_loading = false;
-
-	// PIA state
-	dsp_cr = kbd_cr = 0;
-	kbd_int = dsp_out = 0;
+	pia::reset();
 }
 
 void io::load() {
@@ -81,14 +76,13 @@ static const byte shiftmap[] = {
 };
 
 void io::down(byte scan) {
-	kbd = 0;
+	set_porta(0);
 	if (isshift(scan))
 		_shift = true;
 }
 
 void io::enter(byte key) {
-	kbd = key + 0x80;
-	kbd_cr = 0xa7;
+	set_porta(key + 0x80);
 }
 
 void io::up(byte scan) {
@@ -143,95 +137,27 @@ void io::display(byte b) {
 	draw('_', c, r);
 }
 
-void io::operator=(byte b) {
-
-Serial.print(">");
-Serial.print(_acc, 16);
-Serial.print(" ");
-Serial.println(b, 16);
-
-	switch(_acc % 4) {
-	case 0:
-		kbd = b;
-		break;
-	case 1:
-		if (!kbd_int && b >= 0x80)
-			kbd_int = 1;
-		else
-			kbd_cr = b;
-		break;
-	case 2:
-		if (b >= 0x80)
-			b -= 0x80;
-		display(b);
-		dsp = b;
-		break;
-	case 3:
-		if (!dsp_out && dsp_cr >= 0x80)
-			dsp_out = 1;
-		else
-			dsp_cr = b;
-		break;
-	}
+void io::write_portb(byte b) {
+	b &= 0x7f;
+	display(b);
+	pia::write_portb(b);
 }
 
-io::operator byte() {
-
-	switch (_acc % 4) {
-	case 0:
-/*
-Serial.print("<");
-Serial.print(_acc, 16);
-Serial.print(" ");
-Serial.println(kbd, 16);
-*/
-		return kbd;
-	case 1:
-		if (kbd_int && kbd_cr >= 0x80) {
-			kbd_cr = 0;
-/*
-Serial.print("<");
-Serial.print(_acc, 16);
-Serial.print(" ");
-Serial.println(0xa7, 16);
-*/
-			if (_loading) {
-				if (tape.more())
-					enter(tape.read());
-				else
-					_loading = false;
-			}
-			return 0xa7;
+byte io::read_porta_cr() {
+	byte b = pia::read_porta_cr();
+	if (b == 0xa7) {
+		if (_loading) {
+			if (tape.more())
+				enter(tape.read());
+			else
+				_loading = false;
 		}
-//Serial.println(kbd_cr, 16);
-		return kbd_cr;
-	case 2:
-/*
-Serial.print("<");
-Serial.print(_acc, 16);
-Serial.print(" ");
-Serial.println(dsp, 16);
-*/
-		return dsp;
-	case 3:
-/*
-Serial.print("<");
-Serial.print(_acc, 16);
-Serial.print(" ");
-Serial.println(dsp_cr, 16);
-*/
-		return dsp_cr;
 	}
-	return 0;
+	return b;
 }
 
 void io::checkpoint(Stream &s) {
-	s.write(dsp_cr);
-	s.write(dsp);
-	s.write(kbd_cr);
-	s.write(kbd);
-	s.write(kbd_int);
-	s.write(dsp_out);
+	pia::checkpoint(s);
 	s.write(r);
 	s.write(c);
 	for (int j = 0; j < ROWS; j++)
@@ -240,12 +166,7 @@ void io::checkpoint(Stream &s) {
 }
 
 void io::restore(Stream &s) {
-	dsp_cr = s.read();
-	dsp = s.read();
-	kbd_cr = s.read();
-	kbd = s.read();
-	kbd_int = s.read();
-	dsp_out = s.read();
+	pia::restore(s);
 	r = s.read();
 	c = s.read();
 	for (int j = 0; j < ROWS; j++)

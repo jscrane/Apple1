@@ -1,19 +1,18 @@
 #ifndef _IO_H
 #define _IO_H
 
-class io: public UTFTDisplay, Keyboard {
+// http://mamedev.org/source/src/mess/machine/apple1.c.html
+class io: public UTFTDisplay, Keyboard, public pia {
 public:
-	io(): UTFTDisplay(256) {}
-
-	void operator=(byte);
-	operator byte();
-
 	virtual void reset();
 	virtual void down(byte scan);
 	virtual void up(byte scan);
 
-	void checkpoint(Stream &);
-	void restore(Stream &);
+	virtual void checkpoint(Stream &);
+	virtual void restore(Stream &);
+
+	virtual void write_portb(byte);
+	virtual byte read_porta_cr();
 
 	void load();
 	sdtape tape;
