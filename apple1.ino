@@ -5,14 +5,20 @@
 #include <UTFT.h>
 #include <r65emu.h>
 
-#include "roms/basic.h"
-#include "roms/monitor.h"
 #include "pia.h"
 #include "io.h"
 #include "config.h"
 
+#if defined(KRUSADER)
+#include "roms/krusader6502.h"
+prom b(krusader6502, sizeof(krusader6502));
+#else
+#include "roms/basic.h"
+#include "roms/monitor.h"
 prom b(basic, sizeof(basic));
 prom m(monitor, sizeof(monitor));
+#endif
+
 ram pages[RAM_SIZE / 1024];
 io io;
 
@@ -54,8 +60,12 @@ void setup() {
 
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 	memory.put(io, 0xd000);
+#if defined(KRUSADER)
+	memory.put(b, 0xe000);
+#else
 	memory.put(b, 0xe000);
 	memory.put(m, 0xff00);
+#endif
 
 	reset();
 }

@@ -11,4 +11,6 @@
 #define TFT_BG	VGA_BLACK
 #define PROGRAMS	"/apple1/"
 
+#define KRUSADER	1
+
 #endif
