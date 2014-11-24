@@ -3,7 +3,7 @@
 
 #define RAM_SIZE	0x3000
 #define SPIRAM_BASE	0x3000
-#define SPIRAM_EXTENT	(8 * 1024 / 256)
+#define SPIRAM_EXTENT	(20 * 1024 / 256)
 
 #define CPU_INSTRUCTIONS	1000
 
