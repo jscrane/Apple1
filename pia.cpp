@@ -3,6 +3,11 @@
 #include "pia.h"
 
 void pia::operator=(byte b) {
+Serial.print(millis());
+Serial.print(" > ");
+Serial.print(_acc, 16);
+Serial.print(' ');
+Serial.println(b, 16);
 	switch(_acc % 4) {
 	case 0:
 		write_porta(b);
@@ -20,6 +25,11 @@ void pia::operator=(byte b) {
 }
 
 pia::operator byte() {
+/*
+Serial.print(millis());
+Serial.print(" < ");
+Serial.println(_acc, 16);
+*/
 	switch (_acc % 4) {
 	case 0:
 		return read_porta();

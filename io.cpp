@@ -145,13 +145,14 @@ void io::write_portb(byte b) {
 
 byte io::read_porta_cr() {
 	byte b = pia::read_porta_cr();
-	if (b == 0xa7) {
-		if (_loading) {
-			if (tape.more())
-				enter(tape.read());
-			else
-				_loading = false;
-		}
+	if (b != 0xa7)
+		return b;
+
+	if (_loading) {
+		if (tape.more())
+			enter(tape.read());
+		else
+			_loading = false;
 	}
 	return b;
 }
