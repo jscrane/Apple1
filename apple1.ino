@@ -4,6 +4,7 @@
 #include <SpiRAM.h>
 #include <UTFT.h>
 #include <r65emu.h>
+#include <r6502.h>
 
 #include "pia.h"
 #include "io.h"
