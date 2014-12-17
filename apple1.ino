@@ -73,7 +73,7 @@ void loop() {
 	if (ps2.available()) {
 		unsigned scan = ps2.read2();
 		byte key = scan & 0xff;
-		if (scan < 0x100)
+		if (is_down(scan))
 			io.down(key);
 		else
 			switch (key) {
