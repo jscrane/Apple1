@@ -28,7 +28,6 @@ void status(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	vsnprintf(tmp, sizeof(tmp), fmt, args);
-	Serial.println(tmp);
 	io.clear();
 	io.error(tmp);
 	va_end(args);
@@ -73,8 +72,9 @@ void setup() {
 
 void loop() {
 	if (ps2.available()) {
-		unsigned key = ps2.read();
-		if (!ps2.isbreak())
+		unsigned scan = ps2.read2();
+		byte key = scan & 0xff;
+		if (scan < 0x100)
 			io.down(key);
 		else
 			switch (key) {
