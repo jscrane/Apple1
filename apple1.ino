@@ -52,7 +52,6 @@ void reset() {
 
 void setup() {
 	Serial.begin(115200);
-	Serial.println("hello world");
 	hardware_init(cpu);
 		
 	for (unsigned i = 0; i < RAM_SIZE; i += 1024)
