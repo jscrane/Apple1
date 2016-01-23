@@ -23,19 +23,7 @@ prom m(monitor, sizeof(monitor));
 ram pages[RAM_SIZE / 1024];
 io io;
 
-void status(const char *fmt, ...) {
-	char tmp[256];  
-	va_list args;
-	va_start(args, fmt);
-	vsnprintf(tmp, sizeof(tmp), fmt, args);
-	io.clear();
-	io.error(tmp);
-	va_end(args);
-}
-
-jmp_buf ex;
-r6502 cpu(memory, ex, status);
-bool halted = false;
+r6502 cpu(memory);
 const char *filename;
 
 void reset() {
@@ -46,8 +34,6 @@ void reset() {
 		io.tape.start(PROGRAMS);
 	else
 		io.status("No SD Card");
-
-	halted = (setjmp(ex) != 0);
 }
 
 void setup() {
@@ -105,6 +91,6 @@ void loop() {
 				io.up(key);
 				break;
 			}
-	} else if (!halted)
+	} else if (!cpu.halted())
 		cpu.run(CPU_INSTRUCTIONS);
 }
