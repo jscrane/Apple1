@@ -12,4 +12,3 @@ Keyboard
 - F4: load program from tape (by simulating typing it)
 - F6: checkpoint machine
 - F7: restore from current checkpoint on tape
-- F8: enter debug mode (display current processor status on serial port)

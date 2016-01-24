@@ -84,9 +84,6 @@ void loop() {
 				if (filename)
 					restore(io.tape, PROGRAMS, filename);
 				break;
-			case PS2_F8:
-				cpu.debug();
-				break;
 			default:
 				io.up(key);
 				break;
