@@ -37,7 +37,7 @@ void io::load() {
 }
 
 // ascii map for scan-codes
-static const byte scanmap[] = {
+static const uint8_t scanmap[] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 	// 0x00
 	0xff, 0xff, 0xff, 0xff, 0xff, 0x09, 0x60, 0xff, 	// 0x08
 	0xff, 0xff, 0xff, 0xff, 0xff, 0x51, 0x31, 0xff, 	// 0x10
@@ -56,7 +56,7 @@ static const byte scanmap[] = {
 	0xff, 0x2b, 0x33, 0x2d, 0x2a, 0x39, 0xff, 0xff, 	// 0x78
 };
 
-static const byte shiftmap[] = {
+static const uint8_t shiftmap[] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,		// 0x00
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,		// 0x08
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x21, 0xff,		// 0x10
@@ -75,17 +75,17 @@ static const byte shiftmap[] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,		// 0x78
 };
 
-void io::down(byte scan) {
+void io::down(uint8_t scan) {
 	set_porta(0);
 	if (isshift(scan))
 		_shift = true;
 }
 
-void io::enter(byte key) {
+void io::enter(uint8_t key) {
 	set_porta(key + 0x80);
 }
 
-void io::up(byte scan) {
+void io::up(uint8_t scan) {
 	if (isshift(scan)) {
 		_shift = false;
 		return;
@@ -101,7 +101,7 @@ void io::draw(char ch, int i, int j) {
 	}
 }
 
-void io::display(byte b) {
+void io::display(uint8_t b) {
 	char ch = (char)b;
 	switch(ch) {
 	case 0x5f:
@@ -137,14 +137,14 @@ void io::display(byte b) {
 	draw('_', c, r);
 }
 
-void io::write_portb(byte b) {
+void io::write_portb(uint8_t b) {
 	b &= 0x7f;
 	display(b);
 	pia::write_portb(b);
 }
 
-byte io::read_porta_cr() {
-	byte b = pia::read_porta_cr();
+uint8_t io::read_porta_cr() {
+	uint8_t b = pia::read_porta_cr();
 	if (b != 0xa7)
 		return b;
 

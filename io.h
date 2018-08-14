@@ -5,21 +5,21 @@
 class io: public UTFTDisplay, Keyboard, public pia {
 public:
 	virtual void reset();
-	virtual void down(byte scan);
-	virtual void up(byte scan);
+	virtual void down(uint8_t scan);
+	virtual void up(uint8_t scan);
 
 	virtual void checkpoint(Stream &);
 	virtual void restore(Stream &);
 
-	virtual void write_portb(byte);
-	virtual byte read_porta_cr();
+	virtual void write_portb(uint8_t);
+	virtual uint8_t read_porta_cr();
 
 	void load();
 	sdtape tape;
 private:
-	void display(byte);
+	void display(uint8_t);
 	void draw(char, int, int);
-	void enter(byte);
+	void enter(uint8_t);
 
 	bool _shift;
 	bool _loading;

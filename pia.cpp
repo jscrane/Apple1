@@ -1,13 +1,15 @@
-#include <Energia.h>
+#include <Arduino.h>
 #include <memory.h>
 #include "pia.h"
 
-void pia::operator=(byte b) {
+void pia::operator=(uint8_t b) {
+/*
 Serial.print(millis());
 Serial.print(" > ");
 Serial.print(_acc, 16);
 Serial.print(' ');
 Serial.println(b, 16);
+*/
 	switch(_acc % 4) {
 	case 0:
 		write_porta(b);
@@ -24,7 +26,7 @@ Serial.println(b, 16);
 	}
 }
 
-pia::operator byte() {
+pia::operator uint8_t() {
 /*
 Serial.print(millis());
 Serial.print(" < ");
