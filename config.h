@@ -7,10 +7,10 @@
 
 #define CPU_INSTRUCTIONS	1000
 
-#define TFT_FG	VGA_LIME
-#define TFT_BG	VGA_BLACK
+#define TFT_FG	GREEN
+#define TFT_BG	BLACK
 #define PROGRAMS	"/apple1/"
 
-#define KRUSADER	1
+#define KRUSADER
 
 #endif

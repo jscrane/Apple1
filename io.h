@@ -2,7 +2,7 @@
 #define _IO_H
 
 // http://mamedev.org/source/src/mess/machine/apple1.c.html
-class io: public UTFTDisplay, Keyboard, public pia {
+class io: public TFTDisplay, Keyboard, public pia {
 public:
 	virtual void reset();
 	virtual void down(uint8_t scan);

@@ -1,6 +1,7 @@
-#include <UTFT.h>
+#include <Stream.h>
+#include <stdint.h>
 #include <memory.h>
-#include <utftdisplay.h>
+#include <tftdisplay.h>
 #include <sdtape.h>
 #include <keyboard.h>
 #include <timed.h>
@@ -16,7 +17,7 @@ static unsigned r, c;
 static char screen[ROWS][COLS];
 
 void io::reset() {
-	UTFTDisplay::begin(TFT_BG, TFT_FG);
+	TFTDisplay::begin(TFT_BG, TFT_FG);
 	clear();
 	_cy += 2;
 
@@ -97,7 +98,7 @@ void io::draw(char ch, int i, int j) {
 	if (screen[j][i] != ch) {
 		screen[j][i] = ch;
 		char c[2] = { ch, 0 };
-		utft.print(c, i*_cx, j*_cy);
+		drawString(c, i*_cx, j*_cy);
 	}
 }
 
