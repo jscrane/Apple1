@@ -1,15 +1,16 @@
-#include <Arduino.h>
+#include <Stream.h>
+#include <stdint.h>
 #include <memory.h>
 #include "pia.h"
 
 void pia::operator=(uint8_t b) {
-/*
-Serial.print(millis());
-Serial.print(" > ");
-Serial.print(_acc, 16);
-Serial.print(' ');
-Serial.println(b, 16);
-*/
+#if defined(DEBUGGING)
+	Serial.print(millis());
+	Serial.print(" > ");
+	Serial.print(_acc, 16);
+	Serial.print(' ');
+	Serial.println(b, 16);
+#endif
 	switch(_acc % 4) {
 	case 0:
 		write_porta(b);
@@ -27,11 +28,11 @@ Serial.println(b, 16);
 }
 
 pia::operator uint8_t() {
-/*
-Serial.print(millis());
-Serial.print(" < ");
-Serial.println(_acc, 16);
-*/
+#if defined(DEBUGGING)
+	Serial.print(millis());
+	Serial.print(" < ");
+	Serial.println(_acc, 16);
+#endif
 	switch (_acc % 4) {
 	case 0:
 		return read_porta();

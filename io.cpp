@@ -17,7 +17,7 @@ static unsigned r, c;
 static char screen[ROWS][COLS];
 
 void io::reset() {
-	TFTDisplay::begin(TFT_BG, TFT_FG);
+	TFTDisplay::begin(TFT_BG, TFT_FG, reverse_landscape);
 	clear();
 	_cy += 2;
 
