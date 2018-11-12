@@ -1,8 +1,9 @@
 Apple-1 Emulator
 ================
 - Emulates an Apple-1 with 32k of RAM
-- see [napple1](https://github.com/nobuh/napple1)
-- see also [krusader](http://school.anhb.uwa.edu.au/personalpages/kwessen/apple1/Krusader.htm)
+- See [napple1](https://github.com/nobuh/napple1),
+[krusader](http://school.anhb.uwa.edu.au/personalpages/kwessen/apple1/Krusader.htm)
+and more [software](http://www.willegal.net/appleii/apple1-software.htm).
 
 Keyboard
 --------

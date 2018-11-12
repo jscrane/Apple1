@@ -1,6 +1,7 @@
 *.bin
 *.elf
 .*.d
+spiffs.img
 
 # Compiled Object files
 *.slo
