@@ -1,6 +1,7 @@
 *.bin
 *.elf
 .*.d
+*.d
 spiffs.img
 
 # Compiled Object files
