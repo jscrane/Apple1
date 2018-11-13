@@ -1,9 +1,26 @@
 #include <stdarg.h>
-#include <SPI.h>
-#include <SD.h>
-#include <SpiRAM.h>
-#include <UTFT.h>
 #include <r65emu.h>
+
+#include <SPI.h>
+#if defined(USE_UTFT)
+//#include <UTFT.h>
+#elif defined(USE_ESPI)
+#include <TFT_eSPI.h>
+#endif
+
+#if defined(USE_SD)
+#include <SD.h>
+#elif defined(USE_SPIFFS)
+#include <FS.h>
+#include <SPIFFS.h>
+#elif defined(ESP8266)
+#include <FS.h>
+#endif
+
+#if defined(SPIRAM_CS)
+#include <SpiRAM.h>
+#endif
+
 #include <r6502.h>
 
 #include "pia.h"
@@ -43,7 +60,9 @@ void setup() {
 	for (unsigned i = 0; i < RAM_SIZE; i += 1024)
 		memory.put(pages[i / 1024], i);
 
+#if defined(SPIRAM_CS)
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
+#endif
 	memory.put(io, 0xd000);
 #if defined(KRUSADER)
 	memory.put(b, 0xe000);
