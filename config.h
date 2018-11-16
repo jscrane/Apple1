@@ -13,7 +13,12 @@
 
 #define TFT_FG	GREEN
 #define TFT_BG	BLACK
+
+#if defined(USE_SD)
 #define PROGRAMS	"/apple1/"
+#else
+#define PROGRAMS	"/"
+#endif
 
 #define KRUSADER
 
