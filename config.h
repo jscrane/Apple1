@@ -1,7 +1,7 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-#if defined(SPIRAM_CS)
+#if defined(USE_SPIRAM)
 #define RAM_SIZE	0x3000
 #define SPIRAM_BASE	0x3000
 #define SPIRAM_EXTENT	(20 * 1024 / 256)
