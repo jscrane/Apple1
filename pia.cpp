@@ -1,5 +1,4 @@
-#include <Stream.h>
-#include <stdint.h>
+#include <Arduino.h>
 #include <memory.h>
 #include "pia.h"
 

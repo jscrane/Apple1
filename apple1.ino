@@ -2,20 +2,6 @@
 #include <r65emu.h>
 
 #include <SPI.h>
-#if defined(USE_UTFT)
-//#include <UTFT.h>
-#elif defined(USE_ESPI)
-#include <TFT_eSPI.h>
-#endif
-
-#if defined(USE_SD)
-#include <SD.h>
-#elif defined(USE_SPIFFS)
-#include <FS.h>
-#include <SPIFFS.h>
-#elif defined(ESP8266)
-#include <FS.h>
-#endif
 
 #if defined(SPIRAM_CS)
 #include <SpiRAM.h>
