@@ -8,8 +8,8 @@
 
 #include "pia.h"
 #include "io.h"
-#include "config.h"
 #include "hardware.h"
+#include "config.h"
 
 #define ROWS	24
 #define COLS	40
@@ -17,7 +17,7 @@ static unsigned r, c;
 static char screen[ROWS][COLS];
 
 void io::reset() {
-	TFTDisplay::begin(TFT_BG, TFT_FG, landscape);
+	TFTDisplay::begin(TFT_BG, TFT_FG, TFT_ORIENT);
 	clear();
 	_cy += 2;
 

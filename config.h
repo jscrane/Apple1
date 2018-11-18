@@ -14,6 +14,12 @@
 #define TFT_FG	GREEN
 #define TFT_BG	BLACK
 
+#if defined(USE_UTFT)
+#define TFT_ORIENT	landscape
+#elif defined(USE_ESPI)
+#define TFT_ORIENT	reverse_landscape
+#endif
+
 #if defined(USE_SD)
 #define PROGRAMS	"/apple1/"
 #else
