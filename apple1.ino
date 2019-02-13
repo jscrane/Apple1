@@ -29,7 +29,7 @@ void reset() {
 
 	io.reset();
 	if (sd)
-		io.tape.start(PROGRAMS);
+		io.files.start(PROGRAMS);
 	else
 		io.status("No SD Card");
 }
@@ -67,22 +67,22 @@ void loop() {
 				reset();
 				break;
 			case PS2_F2:
-				filename = io.tape.advance();
+				filename = io.files.advance();
 				io.status(filename);
 				break;
 			case PS2_F3:
-				filename = io.tape.rewind();
+				filename = io.files.rewind();
 				io.status(filename);
 				break;
 			case PS2_F4:
 				io.load();
 				break;
 			case PS2_F6:
-				io.status(checkpoint(io.tape, PROGRAMS));
+				io.status(io.files.checkpoint());
 				break;
 			case PS2_F7:
 				if (filename)
-					restore(io.tape, PROGRAMS, filename);
+					io.files.restore(filename);
 				break;
 			default:
 				io.up(key);

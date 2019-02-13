@@ -15,7 +15,7 @@ public:
 	virtual uint8_t read_porta_cr();
 
 	void load();
-	sdtape tape;
+	flash_filer files;
 private:
 	void display(uint8_t);
 	void draw(char, int, int);

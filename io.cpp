@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <memory.h>
 #include <tftdisplay.h>
-#include <sdtape.h>
+#include <serialio.h>
+#include <filer.h>
 #include <keyboard.h>
 #include <timed.h>
 
@@ -31,9 +32,9 @@ void io::reset() {
 }
 
 void io::load() {
-	if (tape.more()) {
+	if (files.more()) {
 		_loading = true;
-		enter(tape.read());
+		enter(files.read());
 	}
 }
 
@@ -150,8 +151,8 @@ uint8_t io::read_porta_cr() {
 		return b;
 
 	if (_loading) {
-		if (tape.more())
-			enter(tape.read());
+		if (files.more())
+			enter(files.read());
 		else
 			_loading = false;
 	}
