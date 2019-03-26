@@ -4,6 +4,8 @@
 // http://mamedev.org/source/src/mess/machine/apple1.c.html
 class io: public TFTDisplay, Keyboard, public pia {
 public:
+	io(const char *programs): files(programs) {}
+
 	virtual void reset();
 	virtual void down(uint8_t scan);
 	virtual void up(uint8_t scan);

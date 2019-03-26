@@ -1,5 +1,10 @@
 t ?= esp32
 
+ifeq ($t, avr)
+BOARD := uno
+CPPFLAGS := -DNO_CHECKPOINT -DNO_DISPLAY_BUFFER -DHARDWARE_H=\"hw/blank.h\"
+endif
+
 ifeq ($t, esp8266)
 BOARD := d1_mini
 UPLOAD_SPEED := 921600

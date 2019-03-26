@@ -19,7 +19,7 @@ prom m(monitor, sizeof(monitor));
 #endif
 
 ram pages[RAM_SIZE / 1024];
-io io;
+io io(PROGRAMS);
 
 r6502 cpu(memory);
 const char *filename;
@@ -29,7 +29,7 @@ void reset() {
 
 	io.reset();
 	if (sd)
-		io.files.start(PROGRAMS);
+		io.files.start();
 	else
 		io.status("No SD Card");
 }
