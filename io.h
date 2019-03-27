@@ -4,7 +4,7 @@
 // http://mamedev.org/source/src/mess/machine/apple1.c.html
 class io: public TFTDisplay, Keyboard, public pia {
 public:
-	io(const char *programs): files(programs) {}
+	io(filer &files): files(files) {}
 
 	virtual void reset();
 	virtual void down(uint8_t scan);
@@ -17,7 +17,7 @@ public:
 	virtual uint8_t read_porta_cr();
 
 	void load();
-	flash_filer files;
+	filer &files;
 private:
 	void display(uint8_t);
 	void draw(char, int, int);

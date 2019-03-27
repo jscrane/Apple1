@@ -19,7 +19,8 @@ prom m(monitor, sizeof(monitor));
 #endif
 
 ram pages[RAM_SIZE / 1024];
-io io(PROGRAMS);
+flash_filer files(PROGRAMS);
+io io(files);
 
 r6502 cpu(memory);
 const char *filename;
