@@ -10,7 +10,7 @@
 
 #if defined(KRUSADER)
 #include "roms/krusader6502.h"
-prom b(krusader6502, sizeof(krusader6502));
+prom k(krusader6502, sizeof(krusader6502));
 #else
 #include "roms/basic.h"
 #include "roms/monitor.h"
@@ -19,6 +19,7 @@ prom m(monitor, sizeof(monitor));
 #endif
 
 ram pages[RAM_SIZE / 1024];
+//socket_filer files("apple1");
 flash_filer files(PROGRAMS);
 io io(files);
 
@@ -26,13 +27,19 @@ r6502 cpu(memory);
 const char *filename;
 
 void reset() {
-	bool sd = hardware_reset();
+	bool ok = hardware_reset();
 
 	io.reset();
-	if (sd)
-		io.files.start();
-	else
-		io.status("No SD Card");
+	if (!ok) {
+		io.status("Reset failed");
+		return;
+	}
+	io.files.start();
+#if defined(KRUSADER)
+	io.status("Krusader: F000R / Basic: E000R");
+#else
+	io.status("Basic: E000R");
+#endif
 }
 
 void setup() {
@@ -47,7 +54,7 @@ void setup() {
 #endif
 	memory.put(io, 0xd000);
 #if defined(KRUSADER)
-	memory.put(b, 0xe000);
+	memory.put(k, 0xe000);
 #else
 	memory.put(b, 0xe000);
 	memory.put(m, 0xff00);
