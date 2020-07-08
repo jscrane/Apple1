@@ -43,7 +43,9 @@ void reset() {
 }
 
 void setup() {
-	Serial.begin(115200);
+#if defined(DEBUGGING) || defined(CPU_DEBUG)
+	Serial.begin(TERMINAL_SPEED);
+#endif
 	hardware_init(cpu);
 		
 	for (unsigned i = 0; i < RAM_SIZE; i += 1024)
