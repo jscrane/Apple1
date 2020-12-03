@@ -6,7 +6,7 @@ Apple-1 Emulator
 and more [software](http://www.willegal.net/appleii/apple1-software.htm)
 
 Requirements
-============
+------------
 - [6502 Emulation](https://github.com/jscrane/r65emu) library
 - [uC-Makefile](https://github.com/jscrane/uC-Makefile)
 
