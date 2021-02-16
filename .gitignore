@@ -3,6 +3,8 @@
 .*.d
 *.d
 spiffs.img
+.build
+*.txt.mk
 
 # Compiled Object files
 *.slo
