@@ -18,7 +18,7 @@ prom b(basic, sizeof(basic));
 prom m(monitor, sizeof(monitor));
 #endif
 
-ram pages[RAM_SIZE / 1024];
+ram pages[RAM_PAGES];
 //socket_filer files("apple1");
 flash_filer files(PROGRAMS);
 io io(files);
@@ -45,16 +45,25 @@ void reset() {
 void setup() {
 #if defined(DEBUGGING) || defined(CPU_DEBUG)
 	Serial.begin(TERMINAL_SPEED);
+	Serial.println();
+	Serial.printf("RAM:    %dkB at 0x0000", RAM_PAGES);
+	Serial.println();
+#if defined(USE_SPIRAM)
+	Serial.printf("SpiRAM: %dkB at 0x%04x", SPIRAM_EXTENT * Memory::page_size / 1024, SPIRAM_BASE);
+	Serial.println();
+#endif
 #endif
 	hardware_init(cpu);
 		
-	for (unsigned i = 0; i < RAM_SIZE; i += 1024)
-		memory.put(pages[i / 1024], i);
+	for (unsigned i = 0; i < RAM_PAGES; i++)
+		memory.put(pages[i], i * ram::page_size);
 
 #if defined(USE_SPIRAM)
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 #endif
+
 	memory.put(io, 0xd000);
+
 #if defined(KRUSADER)
 	memory.put(k, 0xe000);
 #else
