@@ -2,7 +2,7 @@
 #define _IO_H
 
 // http://mamedev.org/source/src/mess/machine/apple1.c.html
-class io: public TFTDisplay, Keyboard, public pia {
+class io: public Display, Keyboard, public pia {
 public:
 	io(filer &files): files(files) {}
 

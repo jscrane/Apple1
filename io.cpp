@@ -1,7 +1,7 @@
 #include <Stream.h>
 #include <stdint.h>
 #include <memory.h>
-#include <tftdisplay.h>
+#include <display.h>
 #include <serialio.h>
 #include <filer.h>
 #include <keyboard.h>
@@ -18,7 +18,7 @@ static unsigned r, c;
 static char screen[ROWS][COLS];
 
 void io::reset() {
-	TFTDisplay::begin(TFT_BG, TFT_FG, TFT_ORIENT);
+	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
 	clear();
 	_cy += 2;
 
