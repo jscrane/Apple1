@@ -18,13 +18,15 @@
 
 #define CPU_INSTRUCTIONS	1000
 
-#define TFT_FG	GREEN
-#define TFT_BG	BLACK
+#define FG_COLOUR	GREEN
+#define BG_COLOUR	BLACK
 
 #if defined(USE_UTFT)
-#define TFT_ORIENT	landscape
+#define ORIENT	landscape
 #elif defined(USE_ESPI)
-#define TFT_ORIENT	reverse_landscape
+#define ORIENT	reverse_landscape
+#elif defined(USE_VGA)
+#define ORIENT	landscape
 #endif
 
 #if defined(USE_SD)
