@@ -46,10 +46,15 @@ void setup() {
 #if defined(DEBUGGING) || defined(CPU_DEBUG)
 	Serial.begin(TERMINAL_SPEED);
 	Serial.println();
-	Serial.printf("RAM:    %dkB at 0x0000", RAM_PAGES);
+	Serial.print("RAM:    ");
+	Serial.print(RAM_PAGES);
+	Serial.print("kB at 0x0000");
 	Serial.println();
 #if defined(USE_SPIRAM)
-	Serial.printf("SpiRAM: %dkB at 0x%04x", SPIRAM_EXTENT * Memory::page_size / 1024, SPIRAM_BASE);
+	Serial.print("SpiRAM: ");
+	Serial.print(SPIRAM_EXTENT * Memory::page_size / 1024);
+	Serial.print("kB at 0x");
+	Serial.print(SPIRAM_BASE, 16);
 	Serial.println();
 #endif
 #endif
