@@ -17,6 +17,8 @@ inline bool c2_low_to_high(uint8_t cr) { return cr & 0x10; }
 
 inline bool c2_high_to_low(uint8_t cr) { return !c2_low_to_high(cr); }
 
+inline bool output_selected(uint8_t cr) { return cr & 0x04; }
+
 void PIA::write(Memory::address a, uint8_t b) {
 #if defined(DEBUGGING)
 	Serial.print(millis());
@@ -27,13 +29,13 @@ void PIA::write(Memory::address a, uint8_t b) {
 #endif
 	switch(a % 4) {
 	case 0:
-		write_porta(b);
+		output_selected(porta_cr)? write_porta(b): write_ddra(b);
 		break;
 	case 1:
 		write_porta_cr(b);
 		break;
 	case 2:
-		write_portb(b);
+		output_selected(portb_cr)? write_portb(b): write_ddrb(b);
 		break;
 	case 3:
 		write_portb_cr(b);
@@ -49,11 +51,11 @@ uint8_t PIA::read(Memory::address a) {
 #endif
 	switch (a % 4) {
 	case 0:
-		return read_porta();
+		return output_selected(porta_cr)? read_porta(): read_ddra();
 	case 1:
 		return read_porta_cr();
 	case 2:
-		return read_portb();
+		return output_selected(portb_cr)? read_portb(): read_ddrb();
 	case 3:
 		return read_portb_cr();
 	}
@@ -63,8 +65,10 @@ uint8_t PIA::read(Memory::address a) {
 void PIA::checkpoint(Stream &s) {
 	s.write(portb_cr);
 	s.write(portb);
+	s.write(ddrb);
 	s.write(porta_cr);
 	s.write(porta);
+	s.write(ddra);
 	s.write(irq_b1);
 	s.write(irq_b2);
 	s.write(irq_a1);
@@ -78,8 +82,10 @@ void PIA::checkpoint(Stream &s) {
 void PIA::restore(Stream &s) {
 	portb_cr = s.read();
 	portb = s.read();
+	ddrb = s.read();
 	porta_cr = s.read();
 	porta = s.read();
+	ddra = s.read();
 	irq_b1 = s.read();
 	irq_b2 = s.read();
 	irq_a1 = s.read();
