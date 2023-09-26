@@ -1,13 +1,14 @@
 #ifndef __PIA_H__
 #define __PIA_H__
 
-class pia: public Memory::Device {
+// https://en.wikipedia.org/wiki/Peripheral_Interface_Adapter
+class PIA {
 public:
-	pia(): Memory::Device(256), portb_cr(0), porta_cr(0) {}
+	PIA(): portb_cr(0), porta_cr(0) {}
 	virtual void reset() { portb_cr = porta_cr = 0; }
 
-	void operator=(uint8_t);
-	operator uint8_t();
+	void write(Memory::address, uint8_t);
+	uint8_t read(Memory::address);
 
 	void checkpoint(Stream &);
 	void restore(Stream &);

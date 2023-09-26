@@ -28,7 +28,7 @@ void io::reset() {
 			screen[j][i] = ' ';
 
 	_loading = false;
-	pia::reset();
+	PIA::reset();
 }
 
 void io::load() {
@@ -142,11 +142,11 @@ void io::display(uint8_t b) {
 void io::write_portb(uint8_t b) {
 	b &= 0x7f;
 	display(b);
-	pia::write_portb(b);
+	PIA::write_portb(b);
 }
 
 uint8_t io::read_porta_cr() {
-	uint8_t b = pia::read_porta_cr();
+	uint8_t b = PIA::read_porta_cr();
 	if (b != 0xa7)
 		return b;
 
@@ -160,7 +160,7 @@ uint8_t io::read_porta_cr() {
 }
 
 void io::checkpoint(Stream &s) {
-	pia::checkpoint(s);
+	PIA::checkpoint(s);
 	s.write(r);
 	s.write(c);
 	for (int j = 0; j < ROWS; j++)
@@ -169,7 +169,7 @@ void io::checkpoint(Stream &s) {
 }
 
 void io::restore(Stream &s) {
-	pia::restore(s);
+	PIA::restore(s);
 	r = s.read();
 	c = s.read();
 	for (int j = 0; j < ROWS; j++)

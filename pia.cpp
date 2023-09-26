@@ -2,15 +2,15 @@
 #include <memory.h>
 #include "pia.h"
 
-void pia::operator=(uint8_t b) {
+void PIA::write(Memory::address a, uint8_t b) {
 #if defined(DEBUGGING)
 	Serial.print(millis());
 	Serial.print(" > ");
-	Serial.print(_acc, 16);
+	Serial.print(a, 16);
 	Serial.print(' ');
 	Serial.println(b, 16);
 #endif
-	switch(_acc % 4) {
+	switch(a % 4) {
 	case 0:
 		write_porta(b);
 		break;
@@ -26,13 +26,13 @@ void pia::operator=(uint8_t b) {
 	}
 }
 
-pia::operator uint8_t() {
+uint8_t PIA::read(Memory::address a) {
 #if defined(DEBUGGING)
 	Serial.print(millis());
 	Serial.print(" < ");
-	Serial.println(_acc, 16);
+	Serial.println(a, 16);
 #endif
-	switch (_acc % 4) {
+	switch (a % 4) {
 	case 0:
 		return read_porta();
 	case 1:
@@ -45,17 +45,16 @@ pia::operator uint8_t() {
 	return 0xff;
 }
 
-void pia::checkpoint(Stream &s) {
+void PIA::checkpoint(Stream &s) {
 	s.write(portb_cr);
 	s.write(portb);
 	s.write(porta_cr);
 	s.write(porta);
 }
 
-void pia::restore(Stream &s) {
+void PIA::restore(Stream &s) {
 	portb_cr = s.read();
 	portb = s.read();
 	porta_cr = s.read();
 	porta = s.read();
 }
-
