@@ -16,7 +16,9 @@ public:
 	virtual void restore(Stream &);
 
 	virtual void write_portb(uint8_t);
+	virtual void write_portb_cr(uint8_t);
 	virtual uint8_t read_porta_cr();
+	virtual void write_porta_cr(uint8_t);
 
 	void load();
 	filer &files;

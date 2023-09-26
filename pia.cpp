@@ -2,6 +2,9 @@
 #include <memory.h>
 #include "pia.h"
 
+// see: https://github.com/mamedev/mame/blob/master/src/devices/machine/6821pia.cpp
+// and: https://github.com/mamedev/mame/blob/master/src/devices/machine/6821pia.h
+
 void PIA::write(Memory::address a, uint8_t b) {
 #if defined(DEBUGGING)
 	Serial.print(millis());
