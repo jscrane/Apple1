@@ -84,8 +84,9 @@ void io::down(uint8_t scan) {
 }
 
 void io::enter(uint8_t key) {
+	PIA::write_ca1(false);
 	PIA::write_porta(key + 0x80);
-	PIA::write_porta_cr(0xa7);
+	PIA::write_ca1(true);
 }
 
 void io::up(uint8_t scan) {
@@ -146,36 +147,14 @@ void io::write_portb(uint8_t b) {
 	PIA::write_portb(b);
 }
 
-void io::write_portb_cr(uint8_t b) {
-	if (PIA::read_portb_cr() < 0x80)
-		PIA::write_portb_cr(b);
-}
-
 uint8_t io::read_porta_cr() {
-	uint8_t b = PIA::read_porta_cr();
-	if (b & 0x80) {
-		PIA::write_porta_cr(0);
-		b = 0xa7;
-	}
-	if (b != 0xa7)
-		return b;
-
 	if (_loading) {
 		if (files.more())
 			enter(files.read());
 		else
 			_loading = false;
 	}
-	return b;
-}
-
-void io::write_porta_cr(uint8_t b) {
-	uint8_t cr = PIA::read_porta_cr();
-	if (!(cr & 0x80) && b >= 0x80)
-		cr |= 0x80;
-	else
-		cr = b;
-	PIA::write_porta_cr(cr);
+	return PIA::read_porta_cr();
 }
 
 void io::checkpoint(Stream &s) {
