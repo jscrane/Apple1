@@ -6,8 +6,8 @@ public:
 	io(filer &files): Memory::Device(Memory::page_size), files(files) {}
 
 	virtual void reset();
-	virtual void down(uint8_t scan);
-	virtual void up(uint8_t scan);
+	virtual void down(uint8_t);
+	virtual void up(uint8_t);
 
 	virtual void operator=(uint8_t b) { PIA::write(_acc, b); }
 	virtual operator uint8_t() { return PIA::read(_acc); }
@@ -20,13 +20,18 @@ public:
 
 	void load();
 	filer &files;
+
+	static const uint8_t ROWS = 24;
+	static const uint8_t COLS = 40;
+
 private:
 	void display(uint8_t);
 	void draw(char, int, int);
 	void enter(uint8_t);
 
-	bool _shift;
-	bool _loading;
+	bool _shift, _loading;
+	uint8_t r, c;
+	char screen[ROWS][COLS];
 };
 
 #endif

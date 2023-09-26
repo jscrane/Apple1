@@ -12,11 +12,6 @@
 #include "hardware.h"
 #include "config.h"
 
-#define ROWS	24
-#define COLS	40
-static unsigned r, c;
-static char screen[ROWS][COLS];
-
 void io::reset() {
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
 	clear();
@@ -78,7 +73,6 @@ static const uint8_t shiftmap[] PROGMEM = {
 };
 
 void io::down(uint8_t scan) {
-	PIA::write_porta(0);
 	if (isshift(scan))
 		_shift = true;
 }

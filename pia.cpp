@@ -9,6 +9,14 @@ inline bool c1_low_to_high(uint8_t cr) { return cr & 0x02; }
 
 inline bool c1_high_to_low(uint8_t cr) { return !c1_low_to_high(cr); }
 
+inline bool c2_output(uint8_t cr) { return cr & 0x20; }
+
+inline bool c2_input(uint8_t cr) { return !c2_input(cr); }
+
+inline bool c2_low_to_high(uint8_t cr) { return cr & 0x10; }
+
+inline bool c2_high_to_low(uint8_t cr) { return !c2_low_to_high(cr); }
+
 void PIA::write(Memory::address a, uint8_t b) {
 #if defined(DEBUGGING)
 	Serial.print(millis());
@@ -58,9 +66,13 @@ void PIA::checkpoint(Stream &s) {
 	s.write(porta_cr);
 	s.write(porta);
 	s.write(irq_b1);
+	s.write(irq_b2);
 	s.write(irq_a1);
+	s.write(irq_a2);
 	s.write(cb1);
+	s.write(cb2);
 	s.write(ca1);
+	s.write(ca2);
 }
 
 void PIA::restore(Stream &s) {
@@ -69,9 +81,13 @@ void PIA::restore(Stream &s) {
 	porta_cr = s.read();
 	porta = s.read();
 	irq_b1 = s.read();
+	irq_b2 = s.read();
 	irq_a1 = s.read();
+	irq_a2 = s.read();
 	cb1 = s.read();
+	cb2 = s.read();
 	ca1 = s.read();
+	ca2 = s.read();
 }
 
 void PIA::write_ca1(bool state) {
@@ -85,6 +101,17 @@ void PIA::write_ca1(bool state) {
 	ca1 = state;
 }
 
+void PIA::write_ca2(bool state) {
+
+	if (ca2 == state || !c2_input(porta_cr))
+		return;
+
+	if ((state && c2_low_to_high(porta_cr)) || (!state && c2_high_to_low(porta_cr)))
+		irq_a2 = true;
+
+	ca2 = state;
+}
+
 void PIA::write_cb1(bool state) {
 
 	if (cb1 == state)
@@ -96,14 +123,37 @@ void PIA::write_cb1(bool state) {
 	cb1 = state;
 }
 
+void PIA::write_cb2(bool state) {
+
+	if (cb2 == state || !c2_input(portb_cr))
+		return;
+
+	if ((state && c2_low_to_high(portb_cr)) || (!state && c2_high_to_low(portb_cr)))
+		irq_b2 = true;
+
+	cb2 = state;
+}
+
 uint8_t PIA::read_porta_cr() {
+	byte b = porta_cr;
+
 	if (irq_a1)
-		return porta_cr | IRQ1;
-	return porta_cr;
+		b |= IRQ1;
+
+	if (irq_a2 && c2_input(porta_cr))
+		b |= IRQ2;
+
+	return b;
 }
 
 uint8_t PIA::read_portb_cr() {
+	byte b = portb_cr;
+
 	if (irq_b1)
-		return portb_cr | IRQ1;
-	return portb_cr;
+		b |= IRQ1;
+
+	if (irq_b2 && c2_input(portb_cr))
+		b |= IRQ2;
+
+	return b;
 }
