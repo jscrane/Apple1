@@ -12,11 +12,6 @@
 #include "hardware.h"
 #include "config.h"
 
-#define ROWS	24
-#define COLS	40
-static unsigned r, c;
-static char screen[ROWS][COLS];
-
 void io::reset() {
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
 	clear();
@@ -28,7 +23,7 @@ void io::reset() {
 			screen[j][i] = ' ';
 
 	_loading = false;
-	pia::reset();
+	PIA::reset();
 }
 
 void io::load() {
@@ -78,13 +73,14 @@ static const uint8_t shiftmap[] PROGMEM = {
 };
 
 void io::down(uint8_t scan) {
-	set_porta(0);
 	if (isshift(scan))
 		_shift = true;
 }
 
 void io::enter(uint8_t key) {
-	set_porta(key + 0x80);
+	PIA::write_ca1(false);
+	PIA::write_porta_in(key + 0x80);
+	PIA::write_ca1(true);
 }
 
 void io::up(uint8_t scan) {
@@ -142,25 +138,21 @@ void io::display(uint8_t b) {
 void io::write_portb(uint8_t b) {
 	b &= 0x7f;
 	display(b);
-	pia::write_portb(b);
+	PIA::write_portb(b);
 }
 
-uint8_t io::read_porta_cr() {
-	uint8_t b = pia::read_porta_cr();
-	if (b != 0xa7)
-		return b;
-
+uint8_t io::read_cra() {
 	if (_loading) {
 		if (files.more())
 			enter(files.read());
 		else
 			_loading = false;
 	}
-	return b;
+	return PIA::read_cra();
 }
 
 void io::checkpoint(Stream &s) {
-	pia::checkpoint(s);
+	PIA::checkpoint(s);
 	s.write(r);
 	s.write(c);
 	for (int j = 0; j < ROWS; j++)
@@ -169,7 +161,7 @@ void io::checkpoint(Stream &s) {
 }
 
 void io::restore(Stream &s) {
-	pia::restore(s);
+	PIA::restore(s);
 	r = s.read();
 	c = s.read();
 	for (int j = 0; j < ROWS; j++)
