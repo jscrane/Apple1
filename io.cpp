@@ -5,9 +5,9 @@
 #include <serialio.h>
 #include <filer.h>
 #include <keyboard.h>
+#include <pia.h>
 #include <timed.h>
 
-#include "pia.h"
 #include "io.h"
 #include "hardware.h"
 #include "config.h"
