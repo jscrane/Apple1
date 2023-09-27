@@ -34,7 +34,7 @@ void reset() {
 		io.status("Reset failed");
 		return;
 	}
-	io.files.start();
+	io.start();
 #if defined(KRUSADER)
 	io.status("Krusader: F000R / Basic: E000R");
 #else
