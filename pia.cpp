@@ -145,7 +145,7 @@ void PIA::write_cb2(bool state) {
 }
 
 uint8_t PIA::read_cra() {
-	byte b = cra;
+	uint8_t b = cra;
 
 	if (irq_a1)
 		b |= IRQ1;
@@ -157,7 +157,7 @@ uint8_t PIA::read_cra() {
 }
 
 uint8_t PIA::read_crb() {
-	byte b = crb;
+	uint8_t b = crb;
 
 	if (irq_b1)
 		b |= IRQ1;
