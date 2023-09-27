@@ -29,16 +29,16 @@ void PIA::write(Memory::address a, uint8_t b) {
 #endif
 	switch(a % 4) {
 	case 0:
-		output_selected(porta_cr)? write_porta(b): write_ddra(b);
+		output_selected(cra)? write_porta(b): write_ddra(b);
 		break;
 	case 1:
-		write_porta_cr(b);
+		write_cra(b);
 		break;
 	case 2:
-		output_selected(portb_cr)? write_portb(b): write_ddrb(b);
+		output_selected(crb)? write_portb(b): write_ddrb(b);
 		break;
 	case 3:
-		write_portb_cr(b);
+		write_crb(b);
 		break;
 	}
 }
@@ -51,23 +51,25 @@ uint8_t PIA::read(Memory::address a) {
 #endif
 	switch (a % 4) {
 	case 0:
-		return output_selected(porta_cr)? read_porta(): read_ddra();
+		return output_selected(cra)? read_porta(): read_ddra();
 	case 1:
-		return read_porta_cr();
+		return read_cra();
 	case 2:
-		return output_selected(portb_cr)? read_portb(): read_ddrb();
+		return output_selected(crb)? read_portb(): read_ddrb();
 	case 3:
-		return read_portb_cr();
+		return read_crb();
 	}
 	return 0xff;
 }
 
 void PIA::checkpoint(Stream &s) {
-	s.write(portb_cr);
-	s.write(portb);
+	s.write(crb);
+	s.write(outb);
+	s.write(inb);
 	s.write(ddrb);
-	s.write(porta_cr);
-	s.write(porta);
+	s.write(cra);
+	s.write(outa);
+	s.write(ina);
 	s.write(ddra);
 	s.write(irq_b1);
 	s.write(irq_b2);
@@ -80,11 +82,13 @@ void PIA::checkpoint(Stream &s) {
 }
 
 void PIA::restore(Stream &s) {
-	portb_cr = s.read();
-	portb = s.read();
+	crb = s.read();
+	outb = s.read();
+	inb = s.read();
 	ddrb = s.read();
-	porta_cr = s.read();
-	porta = s.read();
+	cra = s.read();
+	outa = s.read();
+	ina = s.read();
 	ddra = s.read();
 	irq_b1 = s.read();
 	irq_b2 = s.read();
@@ -101,7 +105,7 @@ void PIA::write_ca1(bool state) {
 	if (ca1 == state)
 		return;
 
-	if ((state && c1_low_to_high(porta_cr)) || (!state && c1_high_to_low(porta_cr)))
+	if ((state && c1_low_to_high(cra)) || (!state && c1_high_to_low(cra)))
 		irq_a1 = true;
 
 	ca1 = state;
@@ -109,10 +113,10 @@ void PIA::write_ca1(bool state) {
 
 void PIA::write_ca2(bool state) {
 
-	if (ca2 == state || !c2_input(porta_cr))
+	if (ca2 == state || !c2_input(cra))
 		return;
 
-	if ((state && c2_low_to_high(porta_cr)) || (!state && c2_high_to_low(porta_cr)))
+	if ((state && c2_low_to_high(cra)) || (!state && c2_high_to_low(cra)))
 		irq_a2 = true;
 
 	ca2 = state;
@@ -123,7 +127,7 @@ void PIA::write_cb1(bool state) {
 	if (cb1 == state)
 		return;
 
-	if ((state && c1_low_to_high(portb_cr)) || (!state && c1_high_to_low(portb_cr)))
+	if ((state && c1_low_to_high(crb)) || (!state && c1_high_to_low(crb)))
 		irq_b1 = true;
 
 	cb1 = state;
@@ -131,35 +135,45 @@ void PIA::write_cb1(bool state) {
 
 void PIA::write_cb2(bool state) {
 
-	if (cb2 == state || !c2_input(portb_cr))
+	if (cb2 == state || !c2_input(crb))
 		return;
 
-	if ((state && c2_low_to_high(portb_cr)) || (!state && c2_high_to_low(portb_cr)))
+	if ((state && c2_low_to_high(crb)) || (!state && c2_high_to_low(crb)))
 		irq_b2 = true;
 
 	cb2 = state;
 }
 
-uint8_t PIA::read_porta_cr() {
-	byte b = porta_cr;
+uint8_t PIA::read_cra() {
+	byte b = cra;
 
 	if (irq_a1)
 		b |= IRQ1;
 
-	if (irq_a2 && c2_input(porta_cr))
+	if (irq_a2 && c2_input(cra))
 		b |= IRQ2;
 
 	return b;
 }
 
-uint8_t PIA::read_portb_cr() {
-	byte b = portb_cr;
+uint8_t PIA::read_crb() {
+	byte b = crb;
 
 	if (irq_b1)
 		b |= IRQ1;
 
-	if (irq_b2 && c2_input(portb_cr))
+	if (irq_b2 && c2_input(crb))
 		b |= IRQ2;
 
 	return b;
+}
+
+uint8_t PIA::read_porta() {
+	irq_a1 = irq_a2 = false;
+	return (ina & ~ddra) | (outa & ddra);
+}
+
+uint8_t PIA::read_portb() {
+	irq_b1 = irq_b2 = false;
+	return (inb & ~ddrb) | (outb & ddrb);
 }

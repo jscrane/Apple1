@@ -79,7 +79,7 @@ void io::down(uint8_t scan) {
 
 void io::enter(uint8_t key) {
 	PIA::write_ca1(false);
-	PIA::write_porta(key + 0x80);
+	PIA::write_porta_in(key + 0x80);
 	PIA::write_ca1(true);
 }
 
@@ -141,14 +141,14 @@ void io::write_portb(uint8_t b) {
 	PIA::write_portb(b);
 }
 
-uint8_t io::read_porta_cr() {
+uint8_t io::read_cra() {
 	if (_loading) {
 		if (files.more())
 			enter(files.read());
 		else
 			_loading = false;
 	}
-	return PIA::read_porta_cr();
+	return PIA::read_cra();
 }
 
 void io::checkpoint(Stream &s) {
