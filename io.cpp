@@ -1,5 +1,4 @@
-#include <Stream.h>
-#include <stdint.h>
+#include <Arduino.h>
 #include <memory.h>
 #include <display.h>
 #include <serialio.h>
@@ -24,6 +23,28 @@ void io::reset() {
 
 	_loading = false;
 	PIA::reset();
+}
+
+static io *i;
+
+const int TICK_FREQ = 2;
+
+bool io::start() {
+
+	i = this;
+	timer_create(TICK_FREQ, io::on_tick);
+	return files.start();
+}
+
+void IRAM_ATTR io::on_tick() {
+
+	static int tick = 0;
+	tick = ++tick % 3;
+	i->cursor(tick < 2);
+}
+
+void io::cursor(bool on) {
+	draw(on? '_': ' ', c, r);
 }
 
 void io::load() {
