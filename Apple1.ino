@@ -4,6 +4,7 @@
 #include <r65emu.h>
 #include <r6502.h>
 #include <pia.h>
+#include <sd_filer.h>
 
 #include "io.h"
 #include "config.h"
@@ -20,7 +21,11 @@ prom m(monitor, sizeof(monitor));
 
 ram pages[RAM_PAGES];
 //socket_filer files("apple1");
+#if defined(USE_SD)
+sd_filer files(PROGRAMS);
+#else
 flash_filer files(PROGRAMS);
+#endif
 io io(files);
 
 r6502 cpu(memory);
