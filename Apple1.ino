@@ -19,7 +19,7 @@ prom b(basic, sizeof(basic));
 prom m(monitor, sizeof(monitor));
 #endif
 
-ram pages[RAM_PAGES];
+ram<> pages[RAM_PAGES];
 //socket_filer files("apple1");
 #if defined(USE_SD)
 sd_filer files(PROGRAMS);
@@ -66,7 +66,7 @@ void setup() {
 	hardware_init(cpu);
 		
 	for (unsigned i = 0; i < RAM_PAGES; i++)
-		memory.put(pages[i], i * ram::page_size);
+		memory.put(pages[i], i * ram<>::page_size);
 
 #if defined(USE_SPIRAM)
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
