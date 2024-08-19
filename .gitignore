@@ -5,6 +5,7 @@
 spiffs.img
 .build
 *.txt.mk
+*.swp
 
 # Compiled Object files
 *.slo
