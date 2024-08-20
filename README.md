@@ -12,9 +12,10 @@ Requirements
 
 Keyboard
 --------
-- F1: reset
-- F2: advance tape
-- F3: rewind tape
-- F4: load program from tape (by simulating typing it)
-- F6: checkpoint machine
-- F7: restore from current checkpoint on tape
+- F1 (^N): reset
+- F2 (^M): advance tape
+- F3 (^O): rewind tape
+- F4 (^P): load program from tape (by simulating typing it)
+- F6 (^R): checkpoint machine
+- F7 (^S): restore from current checkpoint on tape
+- Underscore is rubout
