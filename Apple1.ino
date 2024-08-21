@@ -125,6 +125,6 @@ void setup() {
 }
 
 void loop() {
-	if (!cpu.halted())
-		cpu.run(CPU_INSTRUCTIONS);
+
+	hardware_run();
 }

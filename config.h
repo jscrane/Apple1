@@ -16,8 +16,6 @@
 
 #endif
 
-#define CPU_INSTRUCTIONS	1000
-
 #define FG_COLOUR	GREEN
 #define BG_COLOUR	BLACK
 
