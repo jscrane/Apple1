@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#include <setjmp.h>
 #include <SPI.h>
 
 #include <r65emu.h>
@@ -58,15 +57,12 @@ void reset() {
 #endif
 }
 
-jmp_buf jb;
-
 void function_key(uint8_t fn) {
 	static const char *filename;
 
 	switch(fn) {
 	case 1:
 		reset();
-		longjmp(jb, 1);
 		break;
 	case 2:
 		filename = io.files.advance();
@@ -129,7 +125,6 @@ void setup() {
 }
 
 void loop() {
-	setjmp(jb);
 	if (!cpu.halted())
 		cpu.run(CPU_INSTRUCTIONS);
 }
