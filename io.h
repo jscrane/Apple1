@@ -1,17 +1,16 @@
 #ifndef _IO_H
 #define _IO_H
 
-class io: public Memory::Device, public Display, Keyboard, public PIA {
+class serial_kbd;
+
+class io: public Memory::Device, public Display, public PIA {
 public:
-	io(filer &files): Memory::Device(Memory::page_size), files(files) {}
+	io(filer &files, serial_kbd &kbd): Memory::Device(Memory::page_size), files(files), _kbd(kbd) {}
 
 	void reset();
 	bool start();
 
 	static void on_tick();
-
-	void down(uint8_t);
-	void up(uint8_t);
 
 	void operator=(uint8_t b) { PIA::write(_acc, b); }
 	operator uint8_t() { return PIA::read(_acc); }
@@ -29,6 +28,8 @@ public:
 	static const uint8_t COLS = 40;
 
 private:
+	serial_kbd &_kbd;
+
 	void cursor(bool on);
 	void display(uint8_t);
 	void draw(char, int, int);

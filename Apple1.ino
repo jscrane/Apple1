@@ -26,10 +26,20 @@ sd_filer files(PROGRAMS);
 #else
 flash_filer files(PROGRAMS);
 #endif
-io io(files);
+
+#if defined(PS2_SERIAL_KBD)
+ps2_serial_kbd kbd;
+
+#elif defined(HW_SERIAL_KBD)
+hw_serial_kbd kbd(Serial);
+
+#else
+#error "No keyboard defined!"
+#endif
+
+io io(files, kbd);
 
 r6502 cpu(memory);
-const char *filename;
 
 void reset() {
 	bool ok = hardware_reset();
@@ -45,6 +55,37 @@ void reset() {
 #else
 	io.status("Basic: E000R");
 #endif
+}
+
+void function_key(uint8_t fn) {
+	static const char *filename;
+
+	switch(fn) {
+	case 1:
+		reset();
+		break;
+	case 2:
+		filename = io.files.advance();
+		io.status(filename);
+		break;
+	case 3:
+		filename = io.files.rewind();
+		io.status(filename);
+		break;
+	case 4:
+		io.load();
+		break;
+	case 6:
+		io.status(io.files.checkpoint());
+		break;
+	case 7:
+		if (filename)
+			io.files.restore(filename);
+		break;
+	case 10:
+		hardware_debug_cpu();
+		break;
+	}
 }
 
 void setup() {
@@ -81,42 +122,12 @@ void setup() {
 	memory.put(m, 0xff00);
 #endif
 
+	kbd.register_fnkey_handler(function_key);
+
 	reset();
 }
 
 void loop() {
-	if (ps2.available()) {
-		unsigned scan = ps2.read2();
-		byte key = scan & 0xff;
-		if (is_down(scan))
-			io.down(key);
-		else
-			switch (key) {
-			case PS2_F1:
-				reset();
-				break;
-			case PS2_F2:
-				filename = io.files.advance();
-				io.status(filename);
-				break;
-			case PS2_F3:
-				filename = io.files.rewind();
-				io.status(filename);
-				break;
-			case PS2_F4:
-				io.load();
-				break;
-			case PS2_F6:
-				io.status(io.files.checkpoint());
-				break;
-			case PS2_F7:
-				if (filename)
-					io.files.restore(filename);
-				break;
-			default:
-				io.up(key);
-				break;
-			}
-	} else if (!cpu.halted())
-		cpu.run(CPU_INSTRUCTIONS);
+
+	hardware_run();
 }
