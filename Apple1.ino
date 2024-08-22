@@ -82,6 +82,9 @@ void function_key(uint8_t fn) {
 		if (filename)
 			io.files.restore(filename);
 		break;
+	case 10:
+		hardware_debug_cpu();
+		break;
 	}
 }
 

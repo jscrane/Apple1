@@ -18,4 +18,5 @@ Keyboard
 - F4 (^P): load program from tape (by simulating typing it)
 - F6 (^R): checkpoint machine
 - F7 (^S): restore from current checkpoint on tape
+- F10(^W): watch CPU execute instructions
 - Underscore is rubout
