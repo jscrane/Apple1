@@ -32,16 +32,15 @@ flash_filer files(PROGRAMS);
 
 #if defined(PS2_SERIAL_KBD)
 ps2_serial_kbd kbd;
-
-#elif defined(HW_SERIAL_KBD)
-hw_serial_kbd kbd(Serial);
-
 #else
-#error "No keyboard defined!"
+hw_serial_kbd kbd(Serial);
 #endif
 
-//screen_disp dsp;
+#if defined(SCREEN_SERIAL_DSP)
+screen_disp dsp;
+#else
 terminal_disp dsp(Serial);
+#endif
 io io(files, kbd, dsp);
 
 r6502 cpu(memory);
