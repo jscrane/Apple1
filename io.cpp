@@ -23,7 +23,6 @@ void io::reset() {
 
 bool io::start() {
 
-	_dsp.start();
 	return files.start();
 }
 

@@ -12,6 +12,8 @@ public:
 	void status(const char *s) { Display::status(s); }
 
 protected:
+	static void on_tick();
+
 	void cursor(bool on);
 
 private:
