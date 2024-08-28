@@ -1,8 +1,6 @@
 #ifndef __SCREEN_DISP_H__
 #define __SCREEN_DISP_H__
 
-class serial_kbd;
-
 class screen_disp: public Display, public disp {
 public:
 	void reset();
@@ -11,6 +9,7 @@ public:
 	void restore(Stream &);
 
 	void display(uint8_t);
+	void status(const char *s) { Display::status(s); }
 
 protected:
 	void cursor(bool on);

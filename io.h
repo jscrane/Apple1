@@ -4,7 +4,7 @@
 class serial_kbd;
 class disp;
 
-class io: public Memory::Device, public Display, public PIA {
+class io: public Memory::Device, public PIA {
 public:
 	io(filer &files, serial_kbd &kbd, disp &dsp): 
 		Memory::Device(Memory::page_size), files(files), _kbd(kbd), _dsp(dsp) {}

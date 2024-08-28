@@ -49,14 +49,14 @@ void reset() {
 
 	io.reset();
 	if (!ok) {
-		io.status("Reset failed");
+		dsp.status("Reset failed");
 		return;
 	}
 	io.start();
 #if defined(KRUSADER)
-	io.status("Krusader: F000R / Basic: E000R");
+	dsp.status("Krusader: F000R / Basic: E000R");
 #else
-	io.status("Basic: E000R");
+	dsp.status("Basic: E000R");
 #endif
 }
 
@@ -69,17 +69,17 @@ void function_key(uint8_t fn) {
 		break;
 	case 2:
 		filename = io.files.advance();
-		io.status(filename);
+		dsp.status(filename);
 		break;
 	case 3:
 		filename = io.files.rewind();
-		io.status(filename);
+		dsp.status(filename);
 		break;
 	case 4:
 		io.load();
 		break;
 	case 6:
-		io.status(io.files.checkpoint());
+		dsp.status(io.files.checkpoint());
 		break;
 	case 7:
 		if (filename)

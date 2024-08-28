@@ -1,8 +1,6 @@
 #ifndef _DISP_H
 #define _DISP_H
 
-class serial_kbd;
-
 class disp {
 public:
 	virtual void reset() =0;
@@ -14,6 +12,7 @@ public:
 	virtual void restore(Stream &) =0;
 
 	virtual void display(uint8_t) =0;
+	virtual void status(const char *) =0;
 
 protected:
 	virtual void cursor(bool on) =0;
