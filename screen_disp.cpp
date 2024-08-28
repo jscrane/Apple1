@@ -34,7 +34,7 @@ void screen_disp::draw(char ch, int i, int j) {
 void screen_disp::write(uint8_t b) {
 	char ch = (char)b;
 	switch(ch) {
-	case 0x5f:
+	case '_':
 		draw(' ', c, r);
 		if (c-- == 0) {
 			r--;
