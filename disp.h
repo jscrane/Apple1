@@ -3,26 +3,20 @@
 
 class serial_kbd;
 
-class disp: public Display {
+class disp {
 public:
-	void reset();
+	virtual void reset() =0;
 	bool start();
 
 	static void on_tick();
 
-	void checkpoint(Stream &);
-	void restore(Stream &);
+	virtual void checkpoint(Stream &) =0;
+	virtual void restore(Stream &) =0;
 
-	static const uint8_t ROWS = 24;
-	static const uint8_t COLS = 40;
+	virtual void display(uint8_t) =0;
 
-	void display(uint8_t);
-	void cursor(bool on);
-private:
-	void draw(char, int, int);
-
-	uint8_t r, c;
-	char screen[ROWS][COLS];
+protected:
+	virtual void cursor(bool on) =0;
 };
 
 #endif

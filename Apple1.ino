@@ -8,6 +8,7 @@
 
 #include "io.h"
 #include "disp.h"
+#include "screen_disp.h"
 #include "config.h"
 
 #if defined(KRUSADER)
@@ -38,7 +39,7 @@ hw_serial_kbd kbd(Serial);
 #error "No keyboard defined!"
 #endif
 
-disp dsp;
+screen_disp dsp;
 io io(files, kbd, dsp);
 
 r6502 cpu(memory);
