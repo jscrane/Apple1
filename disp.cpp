@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <timed.h>
+#include <serial_dsp.h>
 
 #include "disp.h"
 

@@ -8,7 +8,7 @@ public:
 	void checkpoint(Stream &);
 	void restore(Stream &);
 
-	void display(uint8_t);
+	void write(uint8_t);
 	void status(const char *s) { Display::status(s); }
 
 protected:

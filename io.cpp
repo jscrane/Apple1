@@ -4,6 +4,7 @@
 #include <serialio.h>
 #include <filer.h>
 #include <serial_kbd.h>
+#include <serial_dsp.h>
 #include <pia.h>
 #include <timed.h>
 
@@ -41,7 +42,7 @@ void io::enter(uint8_t key) {
 
 void io::write_portb(uint8_t b) {
 	b &= 0x7f;
-	_dsp.display(b);
+	_dsp.write(b);
 	PIA::write_portb(b);
 }
 

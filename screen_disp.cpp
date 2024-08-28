@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <memory.h>
 #include <display.h>
+#include <serial_dsp.h>
 #include <hardware.h>
 
 #include "disp.h"
@@ -30,7 +31,7 @@ void screen_disp::draw(char ch, int i, int j) {
 	}
 }
 
-void screen_disp::display(uint8_t b) {
+void screen_disp::write(uint8_t b) {
 	char ch = (char)b;
 	switch(ch) {
 	case 0x5f:
