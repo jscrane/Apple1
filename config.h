@@ -23,11 +23,9 @@
 #define FG_COLOUR	GREEN
 #define BG_COLOUR	BLACK
 
-#if defined(USE_UTFT)
-#define ORIENT	landscape
-#elif defined(USE_ESPI)
+#if defined(USE_ESPI)
 #define ORIENT	reverse_landscape
-#elif defined(USE_VGA)
+#else
 #define ORIENT	landscape
 #endif
 
