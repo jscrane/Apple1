@@ -7,6 +7,9 @@
 #include <sd_filer.h>
 
 #include "io.h"
+#include "disp.h"
+#include "screen_disp.h"
+#include "terminal_disp.h"
 #include "config.h"
 
 #if defined(KRUSADER)
@@ -29,15 +32,16 @@ flash_filer files(PROGRAMS);
 
 #if defined(PS2_SERIAL_KBD)
 ps2_serial_kbd kbd;
-
-#elif defined(HW_SERIAL_KBD)
-hw_serial_kbd kbd(Serial);
-
 #else
-#error "No keyboard defined!"
+hw_serial_kbd kbd(Serial);
 #endif
 
-io io(files, kbd);
+#if defined(SCREEN_SERIAL_DSP)
+screen_disp dsp;
+#else
+terminal_disp dsp(Serial);
+#endif
+io io(files, kbd, dsp);
 
 r6502 cpu(memory);
 
@@ -46,14 +50,14 @@ void reset() {
 
 	io.reset();
 	if (!ok) {
-		io.status("Reset failed");
+		dsp.status("Reset failed");
 		return;
 	}
 	io.start();
 #if defined(KRUSADER)
-	io.status("Krusader: F000R / Basic: E000R");
+	dsp.status("Krusader: F000R / Basic: E000R");
 #else
-	io.status("Basic: E000R");
+	dsp.status("Basic: E000R");
 #endif
 }
 
@@ -66,17 +70,17 @@ void function_key(uint8_t fn) {
 		break;
 	case 2:
 		filename = io.files.advance();
-		io.status(filename);
+		dsp.status(filename);
 		break;
 	case 3:
 		filename = io.files.rewind();
-		io.status(filename);
+		dsp.status(filename);
 		break;
 	case 4:
 		io.load();
 		break;
 	case 6:
-		io.status(io.files.checkpoint());
+		dsp.status(io.files.checkpoint());
 		break;
 	case 7:
 		if (filename)
