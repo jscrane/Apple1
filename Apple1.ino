@@ -43,6 +43,7 @@ terminal_disp dsp(Serial);
 #endif
 io io(files, kbd, dsp);
 
+Memory memory;
 r6502 cpu(memory);
 
 void reset() {
