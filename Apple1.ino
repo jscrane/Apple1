@@ -54,12 +54,24 @@ void reset() {
 		dsp.status("Reset failed");
 		return;
 	}
-	io.start();
+	if (!io.start()) {
+		dsp.status("IO Start failed");
+		return;
+	}
 #if defined(KRUSADER)
 	dsp.status("Krusader: F000R / Basic: E000R");
 #else
 	dsp.status("Basic: E000R");
 #endif
+}
+
+static const char *open(const char *filename) {
+	if (filename) {
+		dsp.status(filename);
+		return filename;
+	}
+	dsp.status("No file");
+	return 0;
 }
 
 void function_key(uint8_t fn) {
@@ -70,20 +82,18 @@ void function_key(uint8_t fn) {
 		reset();
 		break;
 	case 2:
-		filename = io.files.advance();
-		dsp.status(filename);
+		filename = open(io.files.advance());
 		break;
 	case 3:
-		filename = io.files.rewind();
-		dsp.status(filename);
+		filename = open(io.files.rewind());
 		break;
-	case 4:
+	case 5:
 		io.load();
 		break;
-	case 6:
+	case 7:
 		dsp.status(io.files.checkpoint());
 		break;
-	case 7:
+	case 8:
 		if (filename)
 			io.files.restore(filename);
 		break;
@@ -94,27 +104,24 @@ void function_key(uint8_t fn) {
 }
 
 void setup() {
-#if defined(DEBUGGING) || defined(CPU_DEBUG)
-	Serial.begin(TERMINAL_SPEED);
-	Serial.println();
-	Serial.print("RAM:    ");
-	Serial.print(RAM_PAGES);
-	Serial.print("kB at 0x0000");
-	Serial.println();
-#if defined(USE_SPIRAM)
-	Serial.print("SpiRAM: ");
-	Serial.print(SPIRAM_EXTENT * Memory::page_size / 1024);
-	Serial.print("kB at 0x");
-	Serial.print(SPIRAM_BASE, 16);
-	Serial.println();
-#endif
-#endif
+
 	hardware_init(cpu);
-		
+
+	DBG(print("RAM:    "));
+	DBG(print(RAM_PAGES));
+	DBG(print("kB at 0x0000"));
+	DBG(println());
+
 	for (unsigned i = 0; i < RAM_PAGES; i++)
 		memory.put(pages[i], i * ram<>::page_size);
 
 #if defined(USE_SPIRAM)
+	DBG(print("SpiRAM: "));
+	DBG(print(SPIRAM_EXTENT * Memory::page_size / 1024));
+	DBG(print("kB at 0x"));
+	DBG(print(SPIRAM_BASE, 16));
+	DBG(println());
+
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 #endif
 
