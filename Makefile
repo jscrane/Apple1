@@ -1,7 +1,7 @@
 t ?= esp32
 
 TERMINAL_SPEED := 115200
-CPPFLAGS = -DDEBUGGING -DCPU_DEBUG=false -DTERMINAL_SPEED=$(TERMINAL_SPEED) -DUSE_OWN_KBD
+CPPFLAGS = -Wall -DDEBUGGING -DCPU_DEBUG=false -DTERMINAL_SPEED=$(TERMINAL_SPEED) -DUSE_OWN_KBD
 LIBRARIES = PS2KeyAdvanced PS2KeyMap
 
 ifeq ($t, esp8266)
@@ -43,7 +43,9 @@ endif
 ifeq ($t, rp2040)
 BOARD := adafruit_feather_dvi
 FLASH := 8388608_2097152
-CPPFLAGS += -DHARDWARE_H=\"hw/adafruit_feather_dvi.h\" -DPS2_SERIAL_KBD=\"UK\"
+CPPFLAGS += -DHARDWARE_H=\"hw/adafruit_feather_dvi.h\" -DUSE_SERIAL
+#CPPFLAGS += -DHARDWARE_H=\"hw/adafruit_feather_dvi.h\" -DPS2_SERIAL_KBD=\"UK\"
+CPPFLAGS += -DDVI_BIT_DEPTH=1 -DDVI_RESOLUTION=DVI_RES_640x240p60
 LIBRARIES += LittleFS PicoDVI Adafruit_GFX Adafruit_BusIO Wire
 endif
 

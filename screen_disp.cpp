@@ -16,7 +16,7 @@ const int TICK_FREQ = 2;
 void IRAM_ATTR screen_disp::on_tick() {
 
 	static int tick = 0;
-	tick = ++tick % 3;
+	tick = (tick + 1) % 3;
 	i->cursor(tick < 2);
 }
 
@@ -28,8 +28,8 @@ void screen_disp::reset() {
 	}
 
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
+	Display::setScreen(COLS * charWidth(), ROWS * charHeight());
 	Display::clear();
-	_cy += 2;
 
 	r = c = 0;
 	for (int j = 0; j < ROWS; j++)
@@ -45,7 +45,7 @@ void screen_disp::draw(char ch, int i, int j) {
 	if (screen[j][i] != ch) {
 		screen[j][i] = ch;
 		char c[2] = { ch, 0 };
-		drawString(c, i*_cx, j*_cy);
+		drawString(c, i * charWidth(), j * charHeight());
 	}
 }
 
