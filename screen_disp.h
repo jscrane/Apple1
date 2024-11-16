@@ -11,12 +11,8 @@ public:
 	void write(uint8_t);
 	void status(const char *s) { Display::status(s); }
 
-protected:
-	static void on_tick();
-
-	void cursor(bool on);
-
 private:
+	void cursor(bool on);
 	void draw(char, int, int);
 
 	static const uint8_t ROWS = 24;

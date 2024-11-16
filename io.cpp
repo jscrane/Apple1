@@ -6,23 +6,24 @@
 #include <serial_kbd.h>
 #include <serial_dsp.h>
 #include <pia.h>
-#include <timed.h>
+#include <hardware.h>
 
 #include "io.h"
 #include "disp.h"
-#include "hardware.h"
 #include "config.h"
 
 void io::reset() {
+	_loading = false;
 	_dsp.reset();
 	_kbd.reset();
-
-	_loading = false;
-	PIA::reset();
+	_pia.reset();
+	_ch = 0;
 }
 
 bool io::start() {
-
+	hardware_interval_timer(10, [this]() { poll(); });
+	_pia.register_portb_write_handler([this](uint8_t b) { _dsp.write(b & 0x7f); });
+	_pia.register_porta_read_handler([this]() { uint8_t c = _ch; _ch = 0; return c; });
 	return files.start();
 }
 
@@ -34,18 +35,15 @@ void io::load() {
 }
 
 void io::enter(uint8_t key) {
-	PIA::write_ca1(false);
-	PIA::write_porta_in(key + 0x80);
-	PIA::write_ca1(true);
+	_pia.write_ca1(false);
+	_ch = key | 0x80;
+	_pia.write_ca1(true);
 }
 
-void io::write_portb(uint8_t b) {
-	b &= 0x7f;
-	_dsp.write(b);
-	PIA::write_portb(b);
-}
+void io::poll() {
+	if (_ch)
+		return;
 
-uint8_t io::read_cra() {
 	if (_loading) {
 		if (files.more())
 			enter(files.read());
@@ -56,16 +54,14 @@ uint8_t io::read_cra() {
 		if (c != -1)
 			enter(c);
 	}
-
-	return PIA::read_cra();
 }
 
 void io::checkpoint(Stream &s) {
-	PIA::checkpoint(s);
+	_pia.checkpoint(s);
 	_dsp.checkpoint(s);
 }
 
 void io::restore(Stream &s) {
-	PIA::restore(s);
+	_pia.restore(s);
 	_dsp.restore(s);
 }

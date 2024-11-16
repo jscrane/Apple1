@@ -2,29 +2,23 @@
 #include <memory.h>
 #include <display.h>
 #include <serial_dsp.h>
-#include <timed.h>
 #include <hardware.h>
 
 #include "disp.h"
 #include "screen_disp.h"
 #include "config.h"
 
-static screen_disp *i;
-
-const int TICK_FREQ = 2;
-
-void IRAM_ATTR screen_disp::on_tick() {
-
-	static int tick = 0;
-	tick = (tick + 1) % 3;
-	i->cursor(tick < 2);
-}
-
 void screen_disp::reset() {
 
-	if (!i) {
-		i = this;
-		timer_create(TICK_FREQ, on_tick);
+	static bool first_time = true;
+
+	if (first_time) {
+		hardware_interval_timer(500, [this]() {
+			static int tick = 0;
+			tick = (tick + 1) % 3;
+			cursor(tick < 2);
+		});
+		first_time = false;
 	}
 
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
