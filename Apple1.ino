@@ -6,6 +6,7 @@
 #include <pia.h>
 #include <sd_filer.h>
 
+#include "hardware.h"
 #include "io.h"
 #include "disp.h"
 #include "screen_disp.h"
@@ -107,20 +108,20 @@ void setup() {
 
 	hardware_init(cpu);
 
-	DBG(print("RAM:    "));
-	DBG(print(RAM_PAGES));
-	DBG(print("kB at 0x0000"));
-	DBG(println());
+	DBG_INI(print("RAM:    "));
+	DBG_INI(print(RAM_PAGES));
+	DBG_INI(print("kB at 0x0000"));
+	DBG_INI(println());
 
 	for (unsigned i = 0; i < RAM_PAGES; i++)
 		memory.put(pages[i], i * ram<>::page_size);
 
 #if defined(USE_SPIRAM)
-	DBG(print("SpiRAM: "));
-	DBG(print(SPIRAM_EXTENT * Memory::page_size / 1024));
-	DBG(print("kB at 0x"));
-	DBG(print(SPIRAM_BASE, 16));
-	DBG(println());
+	DBG_INI(print("SpiRAM: "));
+	DBG_INI(print(SPIRAM_EXTENT * Memory::page_size / 1024));
+	DBG_INI(print("kB at 0x"));
+	DBG_INI(print(SPIRAM_BASE, 16));
+	DBG_INI(println());
 
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 #endif
