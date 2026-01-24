@@ -10,17 +10,6 @@
 
 void screen_disp::reset() {
 
-	static bool first_time = true;
-
-	if (first_time) {
-		hardware_interval_timer(500, [this]() {
-			static int tick = 0;
-			tick = (tick + 1) % 3;
-			cursor(tick < 2);
-		});
-		first_time = false;
-	}
-
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
 	Display::setScreen(COLS * charWidth(), ROWS * charHeight());
 	Display::clear();

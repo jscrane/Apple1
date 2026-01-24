@@ -46,9 +46,9 @@ io io(files, kbd, dsp);
 
 Memory memory;
 r6502 cpu(memory);
+Machine machine(cpu);
 
-void reset() {
-	bool ok = hardware_reset();
+static void reset(bool ok) {
 
 	io.reset();
 	if (!ok) {
@@ -75,12 +75,12 @@ static const char *open(const char *filename) {
 	return 0;
 }
 
-void function_key(uint8_t fn) {
+static void function_key(uint8_t fn) {
 	static const char *filename;
 
 	switch(fn) {
 	case 1:
-		reset();
+		machine.reset();
 		break;
 	case 2:
 		filename = open(io.files.advance());
@@ -99,14 +99,14 @@ void function_key(uint8_t fn) {
 			io.files.restore(filename);
 		break;
 	case 10:
-		hardware_debug_cpu();
+		machine.debug_cpu();
 		break;
 	}
 }
 
 void setup() {
 
-	hardware_init(cpu);
+	machine.init();
 
 	DBG_INI(print("RAM:    "));
 	DBG_INI(print(RAM_PAGES));
@@ -137,10 +137,20 @@ void setup() {
 
 	kbd.register_fnkey_handler(function_key);
 
-	reset();
+#if defined(SCREEN_SERIAL_DISP)
+	machine.interval_timer(500, []() {
+		static int tick = 0;
+		tick = (tick + 1) % 3;
+		screen_disp.cursor(tick < 2);
+	});
+#endif
+	machine.interval_timer(10, []() { io.poll(); });
+
+	machine.register_reset_handler(reset);
+	machine.reset();
 }
 
 void loop() {
 
-	hardware_run();
+	machine.run();
 }

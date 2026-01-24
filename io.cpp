@@ -21,7 +21,6 @@ void io::reset() {
 }
 
 bool io::start() {
-	hardware_interval_timer(10, [this]() { poll(); });
 	_pia.register_portb_write_handler([this](uint8_t b) { _dsp.write(b & 0x7f); });
 	_pia.register_porta_read_handler([this]() { uint8_t c = _ch; _ch = 0; return c; });
 	return files.start();
