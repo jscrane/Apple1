@@ -6,7 +6,6 @@
 #include <pia.h>
 #include <sd_filer.h>
 
-#include "hardware.h"
 #include "io.h"
 #include "disp.h"
 #include "screen_disp.h"
@@ -46,7 +45,7 @@ io io(files, kbd, dsp);
 
 Memory memory;
 r6502 cpu(memory);
-Machine machine(cpu);
+Arduino machine(cpu);
 
 static void reset(bool ok) {
 
@@ -106,22 +105,15 @@ static void function_key(uint8_t fn) {
 
 void setup() {
 
-	machine.init();
+	machine.begin();
 
-	DBG_INI(print("RAM:    "));
-	DBG_INI(print(RAM_PAGES));
-	DBG_INI(print("kB at 0x0000"));
-	DBG_INI(println());
+	DBG_INI("RAM:    %dkB at 0x0000", RAM_PAGES);
 
 	for (unsigned i = 0; i < RAM_PAGES; i++)
 		memory.put(pages[i], i * ram<>::page_size);
 
 #if defined(USE_SPIRAM)
-	DBG_INI(print("SpiRAM: "));
-	DBG_INI(print(SPIRAM_EXTENT * Memory::page_size / 1024));
-	DBG_INI(print("kB at 0x"));
-	DBG_INI(print(SPIRAM_BASE, 16));
-	DBG_INI(println());
+	DBG_INI("SpiRAM: %dkB at 0x%04x", SPIRAM_EXTENT * Memory::page_size / 1024, SPIRAM_BASE);
 
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 #endif
@@ -136,15 +128,6 @@ void setup() {
 #endif
 
 	kbd.register_fnkey_handler(function_key);
-
-#if defined(SCREEN_SERIAL_DISP)
-	machine.interval_timer(500, []() {
-		static int tick = 0;
-		tick = (tick + 1) % 3;
-		screen_disp.cursor(tick < 2);
-	});
-#endif
-	machine.interval_timer(10, []() { io.poll(); });
 
 	machine.register_reset_handler(reset);
 	machine.reset();

@@ -14,10 +14,9 @@ public:
 	void operator=(uint8_t b) { _pia.write(_acc, b); }
 	operator uint8_t() { return _pia.read(_acc); }
 
-	void checkpoint(Stream &);
-	void restore(Stream &);
+	void checkpoint(Checkpoint &);
+	void restore(Checkpoint &);
 
-	void poll();
 	void load();
 	filer &files;
 
@@ -26,6 +25,7 @@ private:
 	serial_kbd &_kbd;
 	disp &_dsp;
 
+	void poll();
 	void enter(uint8_t);
 	bool _loading;
 	uint8_t _ch;

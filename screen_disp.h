@@ -1,12 +1,11 @@
-#ifndef __SCREEN_DISP_H__
-#define __SCREEN_DISP_H__
+#pragma once
 
 class screen_disp: public Display, public disp {
 public:
 	void reset();
 
-	void checkpoint(Stream &);
-	void restore(Stream &);
+	void checkpoint(Checkpoint &);
+	void restore(Checkpoint &);
 
 	void write(uint8_t);
 	void status(const char *s) { Display::status(s); }
@@ -21,5 +20,3 @@ private:
 	uint8_t r, c;
 	char screen[ROWS][COLS];
 };
-
-#endif

@@ -1,4 +1,6 @@
 #include <Arduino.h>
+
+#include <machine.h>
 #include <serial_dsp.h>
 #include "disp.h"
 #include "terminal_disp.h"

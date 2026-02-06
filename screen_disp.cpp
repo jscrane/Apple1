@@ -1,18 +1,29 @@
 #include <Arduino.h>
+
+#include <machine.h>
 #include <memory.h>
 #include <display.h>
 #include <serial_dsp.h>
 #include <hardware.h>
+#include <debugging.h>
 
 #include "disp.h"
 #include "screen_disp.h"
 #include "config.h"
+
+#define CURSOR_BLINK	500000
 
 void screen_disp::reset() {
 
 	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
 	Display::setScreen(COLS * charWidth(), ROWS * charHeight());
 	Display::clear();
+
+	_machine->interval_timer(CURSOR_BLINK, [this]() {
+		static int tick = 0;
+		tick = (tick + 1) % 3;
+		cursor(tick < 2);
+	});
 
 	r = c = 0;
 	for (int j = 0; j < ROWS; j++)
@@ -68,7 +79,7 @@ void screen_disp::write(uint8_t b) {
 	draw('_', c, r);
 }
 
-void screen_disp::checkpoint(Stream &s) {
+void screen_disp::checkpoint(Checkpoint &s) {
 	s.write(r);
 	s.write(c);
 	for (int j = 0; j < ROWS; j++)
@@ -76,7 +87,7 @@ void screen_disp::checkpoint(Stream &s) {
 			s.write(screen[j][i]);
 }
 
-void screen_disp::restore(Stream &s) {
+void screen_disp::restore(Checkpoint &s) {
 	r = s.read();
 	c = s.read();
 	for (int j = 0; j < ROWS; j++)

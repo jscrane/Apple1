@@ -1,4 +1,6 @@
 #include <Arduino.h>
+
+#include <machine.h>
 #include <memory.h>
 #include <display.h>
 #include <serialio.h>
@@ -12,6 +14,8 @@
 #include "disp.h"
 #include "config.h"
 
+#define KBD_POLL	10000
+
 void io::reset() {
 	_loading = false;
 	_dsp.reset();
@@ -21,8 +25,12 @@ void io::reset() {
 }
 
 bool io::start() {
+
 	_pia.register_portb_write_handler([this](uint8_t b) { _dsp.write(b & 0x7f); });
 	_pia.register_porta_read_handler([this]() { uint8_t c = _ch; _ch = 0; return c; });
+
+	_machine->interval_timer(KBD_POLL, [this]() { poll(); });
+
 	return files.start();
 }
 
@@ -55,12 +63,12 @@ void io::poll() {
 	}
 }
 
-void io::checkpoint(Stream &s) {
+void io::checkpoint(Checkpoint &s) {
 	_pia.checkpoint(s);
 	_dsp.checkpoint(s);
 }
 
-void io::restore(Stream &s) {
+void io::restore(Checkpoint &s) {
 	_pia.restore(s);
 	_dsp.restore(s);
 }
