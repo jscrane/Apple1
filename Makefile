@@ -1,7 +1,7 @@
 t ?= esp32
 
 TERMINAL_SPEED := 115200
-CPPFLAGS = -Wall -DDEBUGGING=0x02 -DTERMINAL_SPEED=$(TERMINAL_SPEED) -DUSE_OWN_KBD -DSIMPLE_TIMER_MICROS
+CPPFLAGS = -Wall -DDEBUGGING=0x33 -DTERMINAL_SPEED=$(TERMINAL_SPEED) -DUSE_OWN_KBD -DSIMPLE_TIMER_MICROS
 LIBRARIES = PS2KeyAdvanced PS2KeyMap SimpleTimer
 
 ifeq ($t, esp8266)
@@ -28,7 +28,6 @@ LIBRARIES += FS SPIFFS Network
 ifeq ($b, lilygo)
 BOARD := ttgo-t7-v14-mini32
 SERIAL_PORT := /dev/ttyACM0
-CPPFLAGS += -DHARDWARE_H=\"hw/ttgo-t7-v14-mini32.h\"
 LIBRARIES += ESP32Lib
 
 else
@@ -43,8 +42,8 @@ endif
 ifeq ($t, rp2040)
 BOARD := adafruit_feather_dvi
 FLASH := 8388608_2097152
-CPPFLAGS += -DHARDWARE_H=\"hw/adafruit_feather_dvi.h\" -DUSE_SERIAL
-#CPPFLAGS += -DHARDWARE_H=\"hw/adafruit_feather_dvi.h\" -DPS2_SERIAL_KBD=\"UK\"
+CPPFLAGS += -DUSE_SERIAL
+#CPPFLAGS += -DPS2_SERIAL_KBD=\"UK\"
 CPPFLAGS += -DDVI_BIT_DEPTH=1 -DDVI_RESOLUTION=DVI_RES_640x240p60
 LIBRARIES += LittleFS PicoDVI Adafruit_GFX Adafruit_BusIO Wire
 endif

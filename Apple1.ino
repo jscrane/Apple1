@@ -4,7 +4,7 @@
 #include <r65emu.h>
 #include <r6502.h>
 #include <pia.h>
-#include <sd_filer.h>
+#include <debugging.h>
 
 #include "io.h"
 #include "disp.h"
@@ -51,10 +51,12 @@ static void reset(bool ok) {
 
 	io.reset();
 	if (!ok) {
+		DBG_EMU("Reset failed");
 		dsp.status("Reset failed");
 		return;
 	}
 	if (!io.start()) {
+		DBG_EMU("IO Start failed");
 		dsp.status("IO Start failed");
 		return;
 	}
