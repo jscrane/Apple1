@@ -6,29 +6,22 @@ LIBRARIES = PS2KeyAdvanced PS2KeyMap SimpleTimer
 
 ifeq ($t, esp8266)
 BOARD := d1_mini
-BAUD := 921600
-EESZ := 4M1M
-F_CPU := 80
+baud := 921600
+eesz := 4M1M
 CPPFLAGS += -DUSER_SETUP_LOADED -DILI9341_DRIVER -DTFT_CS=PIN_D8 -DTFT_DC=PIN_D1 \
 	-DTFT_RST=-1 -DSPI_FREQUENCY=40000000 -DLOAD_GLCD \
 	-DHARDWARE_H=\"hw/esp8bit.h\"
 LIBRARIES += TFT_eSPI SpiRAM LittleFS
 endif
 
-ifeq ($t, tivac)
-BOARD := EK-LM4F120XL
-CPPFLAGS += -DHARDWARE_H=\"hw/stellarpad-example.h\" -DPS2_SERIAL_KBD=\"UK\"
-LIBRARIES += UTFT SD SpiRAM
-endif
-
 ifeq ($t, esp32)
-UPLOADSPEED := 921600
 LIBRARIES += FS SPIFFS Network
 
 ifeq ($b, lilygo)
 BOARD := ttgo-t7-v14-mini32
 SERIAL_PORT := /dev/ttyACM0
-LIBRARIES += ESP32Lib
+CPPFLAGS += -DUSE_SD
+LIBRARIES += ESP32Lib SD
 
 else
 BOARD := lolin32
@@ -41,7 +34,7 @@ endif
 
 ifeq ($t, rp2040)
 BOARD := adafruit_feather_dvi
-FLASH := 8388608_2097152
+flash := 8388608_2097152
 CPPFLAGS += -DUSE_SERIAL
 #CPPFLAGS += -DPS2_SERIAL_KBD=\"UK\"
 CPPFLAGS += -DDVI_BIT_DEPTH=1 -DDVI_RESOLUTION=DVI_RES_640x240p60

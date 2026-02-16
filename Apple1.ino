@@ -24,11 +24,7 @@ prom m(monitor, sizeof(monitor));
 
 ram<> pages[RAM_PAGES];
 //socket_filer files("apple1");
-#if defined(USE_SD)
-sd_filer files(PROGRAMS);
-#else
 flash_filer files(PROGRAMS);
-#endif
 
 #if defined(PS2_SERIAL_KBD)
 ps2_serial_kbd kbd;
@@ -131,6 +127,7 @@ void setup() {
 
 	kbd.register_fnkey_handler(function_key);
 
+	machine.register_pollable(io);
 	machine.register_reset_handler(reset);
 	machine.reset();
 }
