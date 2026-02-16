@@ -15,10 +15,6 @@
 
 #endif
 
-// uncomment to use TFT / VGA / DVI display
-// otherwise serial terminal is used
-#define SCREEN_SERIAL_DSP
-
 #define FG_COLOUR	GREEN
 #define BG_COLOUR	BLACK
 

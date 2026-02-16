@@ -9,7 +9,7 @@ public:
 		Memory::Device(Memory::page_size), files(files), _kbd(kbd), _dsp(dsp) {}
 
 	void reset();
-	bool start();
+	bool start() { return files.start(); }
 	void poll();
 
 	void operator=(uint8_t b) { _pia.write(_acc, b); }

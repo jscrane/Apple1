@@ -26,16 +26,18 @@ ram<> pages[RAM_PAGES];
 //socket_filer files("apple1");
 flash_filer files(PROGRAMS);
 
-#if defined(PS2_SERIAL_KBD)
+#if defined(USE_HOST_KBD)
+hw_serial_kbd kbd(Serial);
+#elif defined(PS2_SERIAL_KBD)
 ps2_serial_kbd kbd;
 #else
-hw_serial_kbd kbd(Serial);
+#error "No keyboard defined!"
 #endif
 
-#if defined(SCREEN_SERIAL_DSP)
-screen_disp dsp;
-#else
+#if defined(USE_HOST_DISPLAY)
 terminal_disp dsp(Serial);
+#else
+screen_disp dsp;
 #endif
 io io(files, kbd, dsp);
 
@@ -43,24 +45,22 @@ Memory memory;
 r6502 cpu(memory);
 Arduino machine(cpu);
 
-static void reset(bool ok) {
+static void reset(bool sd) {
 
 	io.reset();
-	if (!ok) {
-		DBG_EMU("Reset failed");
-		dsp.status("Reset failed");
-		return;
-	}
-	if (!io.start()) {
-		DBG_EMU("IO Start failed");
-		dsp.status("IO Start failed");
-		return;
-	}
+	if (!sd) {
+		DBG_EMU("No SD Card");
+		dsp.status("No SD Card");
+	} else if (!io.start()) {
+		DBG_EMU("Failed to open " PROGRAMS);
+		dsp.status("Failed to open " PROGRAMS);
+	} else {
 #if defined(KRUSADER)
-	dsp.status("Krusader: F000R / Basic: E000R");
+		dsp.status("Krusader: F000R / Basic: E000R");
 #else
-	dsp.status("Basic: E000R");
+		dsp.status("Basic: E000R");
 #endif
+	}
 }
 
 static const char *open(const char *filename) {
