@@ -15,9 +15,9 @@
 
 void screen_disp::reset() {
 
-	Display::begin(BG_COLOUR, FG_COLOUR, ORIENT);
-	Display::setScreen(COLS * charWidth(), ROWS * charHeight());
-	Display::clear();
+	display.begin(BG_COLOUR, FG_COLOUR, ORIENT);
+	display.setScreenChars(COLS, ROWS);
+	display.clear();
 
 	_machine->interval_timer(CURSOR_BLINK, [this]() {
 		static int tick = 0;
@@ -38,8 +38,8 @@ void screen_disp::cursor(bool on) {
 void screen_disp::draw(char ch, int i, int j) {
 	if (screen[j][i] != ch) {
 		screen[j][i] = ch;
-		char c[2] = { ch, 0 };
-		drawString(c, i * charWidth(), j * charHeight());
+		display.setCursor(i * display.charWidth(), j * display.charHeight());
+		display.print(ch);
 	}
 }
 

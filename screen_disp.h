@@ -1,6 +1,6 @@
 #pragma once
 
-class screen_disp: public Display, public disp {
+class screen_disp: public disp {
 public:
 	void reset();
 
@@ -8,9 +8,11 @@ public:
 	void restore(Checkpoint &);
 
 	void write(uint8_t);
-	void status(const char *s) { Display::status(s); }
+	void status(const char *s) { display.status(s); }
 
 private:
+	Display display;
+
 	void cursor(bool on);
 	void draw(char, int, int);
 

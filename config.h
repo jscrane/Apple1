@@ -19,9 +19,9 @@
 #define BG_COLOUR	BLACK
 
 #if defined(USE_ESPI)
-#define ORIENT	reverse_landscape
+#define ORIENT		reverse_landscape
 #else
-#define ORIENT	landscape
+#define ORIENT		portrait
 #endif
 
 #if defined(USE_SD)
