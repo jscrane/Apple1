@@ -1,6 +1,6 @@
 #pragma once
 
-class screen_disp: public disp {
+class screen_disp: public serial_dsp {
 public:
 	void reset();
 

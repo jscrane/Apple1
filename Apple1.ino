@@ -7,7 +7,6 @@
 #include <debugging.h>
 
 #include "io.h"
-#include "disp.h"
 #include "screen_disp.h"
 #include "terminal_disp.h"
 #include "config.h"
@@ -39,7 +38,8 @@ terminal_disp dsp(Serial);
 #else
 screen_disp dsp;
 #endif
-io io(files, kbd, dsp);
+PIA pia;
+io io(pia, files, kbd, dsp);
 
 Memory memory;
 r6502 cpu(memory);
@@ -116,7 +116,7 @@ void setup() {
 	memory.put(sram, SPIRAM_BASE, SPIRAM_EXTENT);
 #endif
 
-	memory.put(io, 0xd000);
+	memory.put(pia, 0xd000);
 
 #if defined(KRUSADER)
 	memory.put(k, 0xe000);

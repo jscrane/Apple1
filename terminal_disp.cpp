@@ -2,7 +2,6 @@
 
 #include <machine.h>
 #include <serial_dsp.h>
-#include "disp.h"
 #include "terminal_disp.h"
 
 void terminal_disp::status(const char *s) {

@@ -11,7 +11,6 @@
 #include <hardware.h>
 
 #include "io.h"
-#include "disp.h"
 #include "config.h"
 
 void io::reset() {
@@ -53,14 +52,4 @@ void io::poll() {
 		if (c != -1)
 			enter(c);
 	}
-}
-
-void io::checkpoint(Checkpoint &s) {
-	_pia.checkpoint(s);
-	_dsp.checkpoint(s);
-}
-
-void io::restore(Checkpoint &s) {
-	_pia.restore(s);
-	_dsp.restore(s);
 }

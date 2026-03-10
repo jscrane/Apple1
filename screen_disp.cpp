@@ -7,7 +7,6 @@
 #include <hardware.h>
 #include <debugging.h>
 
-#include "disp.h"
 #include "screen_disp.h"
 #include "config.h"
 
@@ -76,25 +75,5 @@ void screen_disp::write(uint8_t b) {
 		for (int i = 0; i < COLS; i++)
 			draw(' ', i, ROWS-1);
 	}
-	draw('_', c, r);
-}
-
-void screen_disp::checkpoint(Checkpoint &s) {
-	s.write(r);
-	s.write(c);
-	for (int j = 0; j < ROWS; j++)
-		for (int i = 0; i < COLS; i++)
-			s.write(screen[j][i]);
-}
-
-void screen_disp::restore(Checkpoint &s) {
-	r = s.read();
-	c = s.read();
-	for (int j = 0; j < ROWS; j++)
-		for (int i = 0; i < COLS; i++) {
-			char c = s.read();
-			screen[j][i] = c;
-			draw(c, i, j);
-		}
 	draw('_', c, r);
 }
