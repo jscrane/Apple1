@@ -8,7 +8,7 @@
 #elif defined(USE_SPIRAM)
 #define RAM_PAGES	(RAM_SIZE / ram<>::page_size)
 #define SPIRAM_BASE	RAM_SIZE
-#define SPIRAM_EXTENT	min(RAM_TOP - SPIRAM_BASE, SPIRAM_SIZE) / Memory::page_size
+#define SPIRAM_EXTENT	min(RAM_TOP - SPIRAM_BASE, SPIRAM_SIZE)
 
 #else
 #define RAM_PAGES	(RAM_SIZE / ram<>::page_size)
