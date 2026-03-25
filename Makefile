@@ -15,13 +15,18 @@ LIBRARIES += TFT_eSPI SpiRAM LittleFS
 endif
 
 ifeq ($t, esp32)
-LIBRARIES += FS SPIFFS Network
+LIBRARIES += FS LittleFS Network
 
 ifeq ($b, lilygo)
 BOARD := ttgo-t7-v14-mini32
 SERIAL_PORT := /dev/ttyACM0
 CPPFLAGS += -DUSE_SD -DPS2_SERIAL_KBD=\"UK\"
 LIBRARIES += ESP32Lib SD
+
+else ifeq ($b, wrover)
+BOARD := esp32wrover
+CPPFLAGS += -DHARDWARE_H=\"hw/esp32-example.h\" -DUSE_HOST_KBD -DUSE_HOST_DISPLAY -DUSE_SD -DSD_CS=5
+LIBRARIES += SD
 
 else
 BOARD := lolin32

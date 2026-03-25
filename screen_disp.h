@@ -1,17 +1,21 @@
 #pragma once
 
+class Display;
+
 class screen_disp: public serial_dsp {
 public:
+	screen_disp(Display &d): display(d) {}
+
 	void reset();
 
 	void checkpoint(Checkpoint &);
 	void restore(Checkpoint &);
 
 	void write(uint8_t);
-	void status(const char *s) { display.status(s); }
+	void status(const char *);
 
 private:
-	Display display;
+	Display &display;
 
 	void cursor(bool on);
 	void draw(char, int, int);

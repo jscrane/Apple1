@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <stdint.h>
 
 #include <machine.h>
 #include <memory.h>
@@ -6,6 +6,8 @@
 #include <serial_dsp.h>
 #include <hardware.h>
 #include <debugging.h>
+
+#if !defined(USE_HOST_DISPLAY)
 
 #include "screen_disp.h"
 #include "config.h"
@@ -29,6 +31,8 @@ void screen_disp::reset() {
 		for (int i = 0; i < COLS; i++)
 			screen[j][i] = ' ';
 }
+
+void screen_disp::status(const char *s) { display.status(s); }
 
 void screen_disp::cursor(bool on) {
 	draw(on? '_': ' ', c, r);
@@ -77,3 +81,4 @@ void screen_disp::write(uint8_t b) {
 	}
 	draw('_', c, r);
 }
+#endif

@@ -36,7 +36,8 @@ ps2_serial_kbd kbd;
 #if defined(USE_HOST_DISPLAY)
 terminal_disp dsp(Serial);
 #else
-screen_disp dsp;
+Display display;
+screen_disp dsp(display);
 #endif
 PIA pia;
 io io(pia, files, kbd, dsp);
