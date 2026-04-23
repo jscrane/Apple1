@@ -96,6 +96,9 @@ static void function_key(uint8_t fn) {
 		if (filename)
 			io.files.restore(filename);
 		break;
+	case 10:
+		dsp.statusf("%dHz", machine.current_speed());
+		break;
 	}
 }
 
@@ -130,5 +133,5 @@ void setup() {
 
 void loop() {
 
-	machine.run();
+	machine.run(1023000);
 }
