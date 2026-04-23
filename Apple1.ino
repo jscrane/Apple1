@@ -22,7 +22,6 @@ prom m(monitor, sizeof(monitor));
 #endif
 
 ram<> pages[RAM_PAGES];
-//socket_filer files("apple1");
 flash_filer files(PROGRAMS);
 
 #if defined(USE_HOST_KBD)
