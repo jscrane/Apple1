@@ -1,22 +1,25 @@
 #pragma once
 
-class serial_kbd;
+#include <fnkey_kbd.h>
+#include <filer.h>
+class serial_dsp;
+class PIA;
 
-class io: public Pollable {
+class io: public Pollable, private fnkey_kbd {
 public:
-	io(PIA &pia, filer &files, serial_kbd &kbd, serial_dsp &dsp):
-		files(files), _pia(pia), _kbd(kbd), _dsp(dsp) {}
+	io(PIA &pia, filer &files, keyboard &kbd, serial_dsp &dsp):
+		fnkey_kbd(kbd), files(files), _pia(pia), _dsp(dsp) {}
 
-	void reset();
+	void reset() override;
+	void poll() override;
+	using fnkey_kbd::register_fnkey_handler;
+
 	bool start() { return files.start(); }
-	void poll();
-
 	void load();
 	filer &files;
 
 private:
 	PIA &_pia;
-	serial_kbd &_kbd;
 	serial_dsp &_dsp;
 
 	void enter(uint8_t);

@@ -5,7 +5,6 @@
 #include <display.h>
 #include <serialio.h>
 #include <filer.h>
-#include <serial_kbd.h>
 #include <serial_dsp.h>
 #include <pia.h>
 #include <hardware.h>
@@ -15,12 +14,13 @@
 
 void io::reset() {
 
+	fnkey_kbd::reset();
+
 	_pia.register_portb_write_handler([this](uint8_t b) { _dsp.write(b & 0x7f); });
 	_pia.register_porta_read_handler([this]() { uint8_t c = _ch; _ch = 0; return c; });
 
 	_loading = false;
 	_dsp.reset();
-	_kbd.reset();
 	_pia.reset();
 	_ch = 0;
 }
@@ -47,8 +47,8 @@ void io::poll() {
 			enter(files.read());
 		else
 			_loading = false;
-	} else if (_kbd.available()) {
-		int c = _kbd.read();
+	} else if (available()) {
+		int c = read();
 		if (c != -1)
 			enter(c);
 	}

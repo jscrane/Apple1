@@ -35,3 +35,7 @@ spiffs.img
 *.exe
 *.out
 *.app
+.build
+build
+*.txt.mk
+serialout.txt

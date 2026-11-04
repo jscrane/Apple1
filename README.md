@@ -12,12 +12,12 @@ Requirements
 
 Keyboard
 --------
-- F1 (^N): reset
-- F2 (^O): advance tape
-- F3 (^P): rewind tape
-- F5 (^R): load program from tape (by simulating typing it)
-- F7 (^T): checkpoint machine
-- F8 (^U): restore from current checkpoint on tape
+- F1: reset
+- F2: advance tape
+- F3: rewind tape
+- F4: load program from tape (by simulating typing it)
+- F7: checkpoint machine
+- F8: restore from current checkpoint on tape
 - Underscore is rubout
 - If using console keyboard (e.g., with `minicom`), and see "double-line spacing",
   switch off "Add linefeed" (minicom: `^A Z A`)

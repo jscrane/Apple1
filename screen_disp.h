@@ -1,5 +1,6 @@
 #pragma once
 
+#include <serial_dsp.h>
 class Display;
 
 class screen_disp: public serial_dsp {

@@ -5,6 +5,8 @@
 #include <r6502.h>
 #include <pia.h>
 #include <debugging.h>
+#include <flash_filer.h>
+#include <display.h>
 
 #include "io.h"
 #include "screen_disp.h"
@@ -24,26 +26,18 @@ prom m(monitor, sizeof(monitor));
 ram<> pages[RAM_PAGES];
 flash_filer files(PROGRAMS);
 
-#if defined(USE_HOST_KBD)
-hw_serial_kbd kbd(Serial);
-#elif defined(PS2_SERIAL_KBD)
-ps2_serial_kbd kbd;
-#else
-#error "No keyboard defined!"
-#endif
-
 #if defined(USE_HOST_DISPLAY)
 terminal_disp dsp(Serial);
 #else
 Display display;
 screen_disp dsp(display);
 #endif
-PIA pia;
-io io(pia, files, kbd, dsp);
 
 Memory memory;
 r6502 cpu(memory);
 Arduino machine(cpu);
+PIA pia;
+io io(pia, files, machine.console_keyboard(), dsp);
 
 static void reset(bool sd) {
 
@@ -72,30 +66,30 @@ static const char *open(const char *filename) {
 	return 0;
 }
 
-static void function_key(uint8_t fn) {
+static void function_key(uint16_t fn) {
 	static const char *filename;
 
 	switch(fn) {
-	case 1:
+	case F1:
 		machine.reset();
 		break;
-	case 2:
+	case F2:
 		filename = open(io.files.advance());
 		break;
-	case 3:
+	case F3:
 		filename = open(io.files.rewind());
 		break;
-	case 5:
+	case F4:
 		io.load();
 		break;
-	case 7:
+	case F7:
 		dsp.status(io.files.checkpoint());
 		break;
-	case 8:
+	case F8:
 		if (filename)
 			io.files.restore(filename);
 		break;
-	case 10:
+	case F10:
 		dsp.statusf("%dHz", machine.current_speed());
 		break;
 	}
@@ -123,7 +117,7 @@ void setup() {
 	memory.put(m, 0xff00);
 #endif
 
-	kbd.register_fnkey_handler(function_key);
+	io.register_fnkey_handler(function_key);
 
 	machine.register_pollable(io);
 	machine.register_reset_handler(reset);
