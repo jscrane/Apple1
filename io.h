@@ -1,24 +1,23 @@
 #pragma once
 
 #include <fnkey_kbd.h>
-#include <filer.h>
 class serial_dsp;
 class PIA;
+class flash_file;
 
 class io: public Pollable, private fnkey_kbd {
 public:
-	io(PIA &pia, filer &files, keyboard &kbd, serial_dsp &dsp):
-		fnkey_kbd(kbd), files(files), _pia(pia), _dsp(dsp) {}
+	io(PIA &pia, flash_file &tape, keyboard &kbd, serial_dsp &dsp):
+		fnkey_kbd(kbd), _tape(tape), _pia(pia), _dsp(dsp) {}
 
 	void reset() override;
 	void poll() override;
 	using fnkey_kbd::register_fnkey_handler;
 
-	bool start() { return files.start(); }
 	void load();
-	filer &files;
 
 private:
+	flash_file &_tape;
 	PIA &_pia;
 	serial_dsp &_dsp;
 

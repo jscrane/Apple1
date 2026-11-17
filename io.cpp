@@ -3,9 +3,8 @@
 #include <machine.h>
 #include <memory.h>
 #include <display.h>
-#include <serialio.h>
-#include <filer.h>
 #include <serial_dsp.h>
+#include <flash_filer.h>
 #include <pia.h>
 #include <hardware.h>
 
@@ -26,9 +25,9 @@ void io::reset() {
 }
 
 void io::load() {
-	if (files.more()) {
+	if (_tape.more()) {
 		_loading = true;
-		enter(files.read());
+		enter(_tape.read());
 	}
 }
 
@@ -43,8 +42,8 @@ void io::poll() {
 		return;
 
 	if (_loading) {
-		if (files.more())
-			enter(files.read());
+		if (_tape.more())
+			enter(_tape.read());
 		else
 			_loading = false;
 	} else if (available()) {

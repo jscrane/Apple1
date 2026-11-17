@@ -23,8 +23,12 @@ prom b(basic, sizeof(basic));
 prom m(monitor, sizeof(monitor));
 #endif
 
+#if defined(USE_SPIRAM)
+#include <spiram.h>
+#endif
+
 ram<> pages[RAM_PAGES];
-flash_filer files(PROGRAMS);
+flash_device tape("Tape");
 
 #if defined(USE_HOST_DISPLAY)
 terminal_disp dsp(Serial);
@@ -37,7 +41,7 @@ Memory memory;
 r6502 cpu(memory);
 Arduino machine(cpu);
 PIA pia;
-io io(pia, files, machine.console_keyboard(), dsp);
+io io(pia, tape, machine.console_keyboard(), dsp);
 
 static void reset(bool sd) {
 
@@ -45,7 +49,7 @@ static void reset(bool sd) {
 	if (!sd) {
 		DBG_EMU("No SD Card");
 		dsp.status("No SD Card");
-	} else if (!io.start()) {
+	} else if (!tape.start(PROGRAMS)) {
 		DBG_EMU("Failed to open " PROGRAMS);
 		dsp.status("Failed to open " PROGRAMS);
 	} else {
@@ -57,37 +61,23 @@ static void reset(bool sd) {
 	}
 }
 
-static const char *open(const char *filename) {
-	if (filename) {
-		dsp.status(filename);
-		return filename;
-	}
-	dsp.status("No file");
-	return 0;
+static void opened(const char *filename) {
+	dsp.status(filename? filename: "No file");
 }
 
 static void function_key(uint16_t fn) {
-	static const char *filename;
-
 	switch(fn) {
 	case F1:
 		machine.reset();
 		break;
 	case F2:
-		filename = open(io.files.advance());
+		opened(tape.advance());
 		break;
 	case F3:
-		filename = open(io.files.rewind());
+		opened(tape.rewind());
 		break;
 	case F4:
 		io.load();
-		break;
-	case F7:
-		dsp.status(io.files.checkpoint());
-		break;
-	case F8:
-		if (filename)
-			io.files.restore(filename);
 		break;
 	case F10:
 		dsp.statusf("%dHz", machine.current_speed());
